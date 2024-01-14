@@ -1,17 +1,14 @@
 #include <iostream>
 
-// GLEW
-#define GLEW_STATIC
-#include <GL/glew.h>
-#include <GLUT/glut.h>
-
 // GLFW
 #define GLFW_DLL
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-const GLint width = 800; 
-const GLint height = 600;
+#include <GLUT/glut.h>
 
+const GLint width = 800;
+const GLint height = 600;
 
 void processInput(GLFWwindow *window)
 {
@@ -46,12 +43,9 @@ int main(void)
 
   glfwMakeContextCurrent(window);
 
-  glewExperimental = GL_TRUE; // enabled opengl advanded feature
-
-  if (GLEW_OK != glewInit())
+  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
   {
-    std::cout << "Failed to initialize GLEW" << std::endl;
-
+    std::cout << "Failed to initialize GLAD" << std::endl;
     return -1;
   }
 

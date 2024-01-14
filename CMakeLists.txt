@@ -10,6 +10,7 @@ project(vender)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
+find_package(glad CONFIG REQUIRED)
 
 
 set(APP_SOURCES
@@ -32,3 +33,4 @@ add_executable(vender ${APP_SOURCES} ${IMGUI_SOURCES})
 target_link_libraries(vender PRIVATE ${OPENGL_LIBRARIES})
 target_link_libraries(vender PRIVATE GLEW::GLEW)
 target_link_libraries(vender PRIVATE glfw)
+target_link_libraries(vender PRIVATE glad::glad)
