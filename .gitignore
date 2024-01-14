@@ -2,3 +2,7 @@ vcpkg
 build
 .vscode
 .DS_Store
+build_c
+compile_commands.json
+config_c.bat
+.cache
