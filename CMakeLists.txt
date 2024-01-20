@@ -14,6 +14,7 @@ find_package(glad CONFIG REQUIRED)
 
 set(APP_SOURCES
     main.cpp
+    shader.h
 )
 
 add_executable(vender ${APP_SOURCES} ${IMGUI_SOURCES})
