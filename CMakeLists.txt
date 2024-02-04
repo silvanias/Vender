@@ -15,6 +15,8 @@ find_package(glad CONFIG REQUIRED)
 set(APP_SOURCES
     main.cpp
     shader.h
+    stb_image.h
+    stb_load.cpp
 )
 
 add_executable(vender ${APP_SOURCES} ${IMGUI_SOURCES})
