@@ -13,16 +13,23 @@
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
+void mouse_callback(GLFWwindow *window, double xpos, double ypos);
 
 const GLint SCR_WIDTH = 800;
 const GLint SCR_HEIGHT = 600;
 
-float deltaTime = 0.0f; // Time between current frame and last frame
-float lastFrame = 0.0f; // Time of last frame
-
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
+float yaw = -90.0f;
+float pitch = 0.0f;
+float lastX = SCR_WIDTH / 2;
+float lastY = SCR_HEIGHT / 2;
+
+float deltaTime = 0.0f; // Time between current frame and last frame
+float lastFrame = 0.0f; // Time of last frame
+
 int main()
 {
   glfwInit();
@@ -48,6 +55,8 @@ int main()
   }
 
   glEnable(GL_DEPTH_TEST);
+  glfwSetCursorPosCallback(window, mouse_callback);
+  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   Shader aShader("../shaders/shader.vs", "../shaders/shader.fs");
 
   // Set up vertices
@@ -166,7 +175,7 @@ int main()
     lastFrame = currentFrame;
 
     // create transformations
-    glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+    glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 projection = glm::mat4(1.0f);
     model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.5f, 1.0f, 0.0f));
 
@@ -237,4 +246,30 @@ void processInput(GLFWwindow *window)
 void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
   glViewport(0, 0, width, height);
+}
+
+void mouse_callback(GLFWwindow *window, double xpos, double ypos)
+{
+  float xoffset = xpos - lastX;
+  float yoffset = lastY - ypos;
+  lastX = xpos;
+  lastY = ypos;
+
+  float sensitivity = 0.1f;
+  xoffset *= sensitivity;
+  yoffset *= sensitivity;
+
+  yaw += xoffset;
+  pitch += yoffset;
+
+  if (pitch > 89.0f)
+    pitch = 89.0f;
+  if (pitch < -89.0f)
+    pitch = -89.0f;
+
+  glm::vec3 direction;
+  direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+  direction.y = sin(glm::radians(pitch));
+  direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+  cameraFront = glm::normalize(direction);
 }
