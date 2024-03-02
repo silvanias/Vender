@@ -17,6 +17,7 @@ set(APP_SOURCES
     shader.h
     stb_image.h
     stb_load.cpp
+    camera.h
 )
 
 add_executable(vender ${APP_SOURCES} ${IMGUI_SOURCES})
