@@ -140,10 +140,13 @@ int main()
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    auto lightColor = glm::vec3(1.0f, 1.0f, (float)sin(glfwGetTime()));
+
     // Cube rendering
     // ---------------------------------------------
     cubeShader.use();
-    cubeShader.setVec3("objColor", glm::vec3(0.07f, 0.51f, 0.55f));
+    cubeShader.setVec3("objColor", glm::vec3(0.3f, 0.3f, 0.3f));
+    cubeShader.setVec3("lightColor", lightColor);
 
     // Object transformations
     glm::mat4 projection = glm::perspective(glm::radians(camera.fov), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -162,7 +165,7 @@ int main()
     // Light rendering
     // ---------------------------------------------
     lightShader.use();
-    lightShader.setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+    lightShader.setVec3("lightColor", lightColor);
 
     lightShader.setMat4("projection", projection);
     lightShader.setMat4("view", view);
