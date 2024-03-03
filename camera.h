@@ -33,7 +33,7 @@ public:
     {
     }
 
-    glm::mat4 calculateView()
+    glm::mat4 calculateView() const
     {
         return glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
     }
@@ -74,7 +74,7 @@ public:
 
     void processZoom(float yoffset)
     {
-        fov -= (float)yoffset;
+        fov -= yoffset;
         if (fov < 1.0f)
             fov = 1.0f;
         if (fov > 90.0f)
