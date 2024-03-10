@@ -146,7 +146,7 @@ int main()
     // Light rendering
     // ---------------------------------------------
     auto lightColor = glm::vec3(1.0f, 1.0f, (float)sin(glfwGetTime()));
-    auto lightPos = glm::vec3((float)cos(glfwGetTime()) * 1.5f, 1.0f, (float)sin(glfwGetTime()));
+    auto lightPos = glm::vec3(1.5f, 0.5f, 0.0f);
 
     lightShader.use();
     lightShader.setVec3("lightColor", lightColor);
@@ -159,7 +159,7 @@ int main()
 
     auto model = glm::mat4(1.0f);
     model = glm::translate(model, lightPos);
-    model = glm::scale(model, glm::vec3(0.4f));
+    model = glm::scale(model, glm::vec3(0.5f));
 
     lightShader.setMat4("model", model);
 
@@ -173,6 +173,7 @@ int main()
     cubeShader.setVec3("objColor", glm::vec3(0.3f, 0.3f, 0.3f));
     cubeShader.setVec3("lightColor", lightColor);
     cubeShader.setVec3("lightPos", lightPos);
+    cubeShader.setVec3("viewPos", camera.cameraPos);
 
     cubeShader.setMat4("projection", projection);
     cubeShader.setMat4("view", view);
