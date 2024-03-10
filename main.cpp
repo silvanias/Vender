@@ -65,48 +65,48 @@ int main()
   Shader lightShader("../shaders/shader.vs", "../shaders/lightShader.fs");
 
   // Set up vertices
-  std::array<float, 180> vertices = {
-      -0.5f, -0.5f, -0.5f,
-      0.5f, -0.5f, -0.5f,
-      0.5f, 0.5f, -0.5f,
-      0.5f, 0.5f, -0.5f,
-      -0.5f, 0.5f, -0.5f,
-      -0.5f, -0.5f, -0.5f,
+  std::array<float, 216> vertices = {
+      -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+      0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+      0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+      0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+      -0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
 
-      -0.5f, -0.5f, 0.5f,
-      0.5f, -0.5f, 0.5f,
-      0.5f, 0.5f, 0.5f,
-      0.5f, 0.5f, 0.5f,
-      -0.5f, 0.5f, 0.5f,
-      -0.5f, -0.5f, 0.5f,
+      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+      0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+      0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+      0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+      -0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
 
-      -0.5f, 0.5f, 0.5f,
-      -0.5f, 0.5f, -0.5f,
-      -0.5f, -0.5f, -0.5f,
-      -0.5f, -0.5f, -0.5f,
-      -0.5f, -0.5f, 0.5f,
-      -0.5f, 0.5f, 0.5f,
+      -0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f,
+      -0.5f, 0.5f, -0.5f, -1.0f, 0.0f, 0.0f,
+      -0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f,
+      -0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f,
+      -0.5f, -0.5f, 0.5f, -1.0f, 0.0f, 0.0f,
+      -0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f,
 
-      0.5f, 0.5f, 0.5f,
-      0.5f, 0.5f, -0.5f,
-      0.5f, -0.5f, -0.5f,
-      0.5f, -0.5f, -0.5f,
-      0.5f, -0.5f, 0.5f,
-      0.5f, 0.5f, 0.5f,
+      0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f,
+      0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
+      0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
+      0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
+      0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f,
+      0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f,
 
-      -0.5f, -0.5f, -0.5f,
-      0.5f, -0.5f, -0.5f,
-      0.5f, -0.5f, 0.5f,
-      0.5f, -0.5f, 0.5f,
-      -0.5f, -0.5f, 0.5f,
-      -0.5f, -0.5f, -0.5f,
+      -0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,
+      0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,
+      0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f,
+      0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f,
+      -0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f,
+      -0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,
 
-      -0.5f, 0.5f, -0.5f,
-      0.5f, 0.5f, -0.5f,
-      0.5f, 0.5f, 0.5f,
-      0.5f, 0.5f, 0.5f,
-      -0.5f, 0.5f, 0.5f,
-      -0.5f, 0.5f, -0.5f};
+      -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+      0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+      0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f,
+      0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f,
+      -0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f,
+      -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f};
 
   unsigned int VBO;
 
@@ -117,15 +117,18 @@ int main()
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices.data(), GL_STATIC_DRAW);
   glBindVertexArray(cubeVAO);
   // Position attribute
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (GLvoid *)nullptr);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid *)nullptr);
   glEnableVertexAttribArray(0);
+  // Normal attribute
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid *)(3 * sizeof(float)));
+  glEnableVertexAttribArray(1);
 
   unsigned int lightVAO;
   glGenVertexArrays(1, &lightVAO);
   glBindVertexArray(lightVAO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   // Position attribute
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (GLvoid *)nullptr);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid *)nullptr);
   glEnableVertexAttribArray(0);
 
   // Render loop
@@ -137,45 +140,47 @@ int main()
 
     processInput(window);
 
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    // Light rendering
+    // ---------------------------------------------
     auto lightColor = glm::vec3(1.0f, 1.0f, (float)sin(glfwGetTime()));
+    auto lightPos = glm::vec3((float)cos(glfwGetTime()) * 1.5f, 1.0f, (float)sin(glfwGetTime()));
+
+    lightShader.use();
+    lightShader.setVec3("lightColor", lightColor);
+
+    glm::mat4 projection = glm::perspective(glm::radians(camera.fov), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+    lightShader.setMat4("projection", projection);
+
+    glm::mat4 view = camera.calculateView();
+    lightShader.setMat4("view", view);
+
+    auto model = glm::mat4(1.0f);
+    model = glm::translate(model, lightPos);
+    model = glm::scale(model, glm::vec3(0.4f));
+
+    lightShader.setMat4("model", model);
+
+    // Draw the light cube
+    glBindVertexArray(lightVAO);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
 
     // Cube rendering
     // ---------------------------------------------
     cubeShader.use();
     cubeShader.setVec3("objColor", glm::vec3(0.3f, 0.3f, 0.3f));
     cubeShader.setVec3("lightColor", lightColor);
+    cubeShader.setVec3("lightPos", lightPos);
 
-    // Object transformations
-    glm::mat4 projection = glm::perspective(glm::radians(camera.fov), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
     cubeShader.setMat4("projection", projection);
-
-    glm::mat4 view = camera.calculateView();
     cubeShader.setMat4("view", view);
-
-    auto model = glm::mat4(1.0f);
+    model = glm::mat4(1.0f);
     cubeShader.setMat4("model", model);
 
     // Draw the cube
     glBindVertexArray(cubeVAO);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-
-    // Light rendering
-    // ---------------------------------------------
-    lightShader.use();
-    lightShader.setVec3("lightColor", lightColor);
-
-    lightShader.setMat4("projection", projection);
-    lightShader.setMat4("view", view);
-
-    model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(1.2f, 1.0f, 2.0f));
-    lightShader.setMat4("model", model);
-
-    // Draw the light cube
-    glBindVertexArray(lightVAO);
     glDrawArrays(GL_TRIANGLES, 0, 36);
 
     // glfw: swap buffers and poll IO events

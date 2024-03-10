@@ -1,7 +1,8 @@
 #version 330 core
-out vec4 FragColor;
 
 uniform vec3 lightColor;
+
+out vec4 FragColor;
 
 void main()
 {
