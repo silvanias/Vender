@@ -6,7 +6,6 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/
 project(vender)
 
 find_package(glm CONFIG REQUIRED)
-#find_package(SDL2 CONFIG REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
@@ -20,17 +19,19 @@ set(APP_SOURCES
     camera.h
 )
 
+set(IMGUI_SOURCES
+    imgui/imgui_demo.cpp
+    imgui/imgui_draw.cpp
+    imgui/imgui_tables.cpp
+    imgui/imgui_widgets.cpp
+    imgui/imgui.cpp
+    imgui/backends/imgui_impl_opengl3.cpp
+    imgui/backends/imgui_impl_glfw.cpp)
+
 add_executable(vender ${APP_SOURCES} ${IMGUI_SOURCES})
-#target_include_directories(${PROJECT_NAME} PRIVATE
-#    imgui
-#    imgui/backends)
-
-
-#target_link_libraries(vender
-#    PRIVATE
-#    $<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>
-#    $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>
-#)
+target_include_directories(${PROJECT_NAME} PRIVATE
+    imgui
+    imgui/backends)
 
 target_link_libraries(vender PRIVATE ${OPENGL_LIBRARIES})
 target_link_libraries(vender PRIVATE glfw)

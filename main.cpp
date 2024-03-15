@@ -4,6 +4,11 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <GLUT/glut.h>
+
+#include "imgui/imgui.h"
+#include "imgui/backends/imgui_impl_opengl3.h"
+#include "imgui/backends/imgui_impl_glfw.h"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -32,6 +37,7 @@ bool firstMouse = true;
 
 int main()
 {
+  const char *glsl_version = "#version 150";
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -58,6 +64,21 @@ int main()
     std::cout << "Failed to initialize GLAD" << std::endl;
     return -1;
   }
+
+  // Setup Dear ImGui context
+  IMGUI_CHECKVERSION();
+  ImGui::CreateContext();
+  ImGuiIO &io = ImGui::GetIO();
+  (void)io;
+  io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
+  io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  // Enable Gamepad Controls
+
+  ImGui::StyleColorsDark();
+
+  // Setup Platform/Renderer backends
+  ImGui_ImplGlfw_InitForOpenGL(window, true); // Second param install_callback=true will install GLFW callbacks and chain to existing ones.
+
+  ImGui_ImplOpenGL3_Init(glsl_version);
 
   glEnable(GL_DEPTH_TEST);
 
@@ -131,6 +152,9 @@ int main()
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid *)nullptr);
   glEnableVertexAttribArray(0);
 
+  bool show_demo_window = true;
+  ImVec4 clear_color = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
+
   // Render loop
   while (!glfwWindowShouldClose(window))
   {
@@ -138,15 +162,14 @@ int main()
     deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
 
-    processInput(window);
-
-    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+    glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    processInput(window);
 
     // Light rendering
     // ---------------------------------------------
     auto lightColor = glm::vec3(1.0f, 1.0f, (float)sin(glfwGetTime()));
-    auto lightPos = glm::vec3(1.5f, 0.5f, 0.0f);
+    auto lightPos = glm::vec3(0.8f, (float)sin(glfwGetTime()), 0.8f);
 
     lightShader.use();
     lightShader.setVec3("lightColor", lightColor);
@@ -159,7 +182,7 @@ int main()
 
     auto model = glm::mat4(1.0f);
     model = glm::translate(model, lightPos);
-    model = glm::scale(model, glm::vec3(0.5f));
+    model = glm::scale(model, glm::vec3(0.01f));
 
     lightShader.setMat4("model", model);
 
@@ -184,6 +207,18 @@ int main()
     glBindVertexArray(cubeVAO);
     glDrawArrays(GL_TRIANGLES, 0, 36);
 
+    // Render UI
+    // ---------------------------------------------
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+
+    if (show_demo_window)
+      ImGui::ShowDemoWindow(&show_demo_window);
+
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
     // glfw: swap buffers and poll IO events
     // ---------------------------------------------
     glfwSwapBuffers(window);
@@ -191,8 +226,14 @@ int main()
   }
 
   glDeleteVertexArrays(1, &cubeVAO);
+  glDeleteVertexArrays(1, &lightVAO);
   glDeleteBuffers(1, &VBO);
 
+  ImGui_ImplOpenGL3_Shutdown();
+  ImGui_ImplGlfw_Shutdown();
+  ImGui::DestroyContext();
+
+  glfwDestroyWindow(window);
   glfwTerminate();
   return 0;
 }
