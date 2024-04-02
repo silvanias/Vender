@@ -35,6 +35,8 @@ float lastFrame = 0.0f;
 
 bool firstMouse = true;
 
+bool DEBUG_MODE = false;
+
 int main()
 {
   const char *glsl_version = "#version 150";
@@ -152,8 +154,7 @@ int main()
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid *)nullptr);
   glEnableVertexAttribArray(0);
 
-  bool show_demo_window = true;
-  ImVec4 clear_color = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
+  auto clear_color = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
 
   // Render loop
   while (!glfwWindowShouldClose(window))
@@ -212,9 +213,12 @@ int main()
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
-
-    if (show_demo_window)
-      ImGui::ShowDemoWindow(&show_demo_window);
+    ImGui::Begin("Controls");
+    if (ImGui::Button("DemoButton"))
+    {
+      // Will activate when button clicked
+    }
+    ImGui::End();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -257,6 +261,20 @@ void processInput(GLFWwindow *window)
     camera.processKeyboard(LEFT, deltaTime);
   if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
     camera.processKeyboard(RIGHT, deltaTime);
+
+  if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS)
+  {
+    if (DEBUG_MODE)
+    {
+      DEBUG_MODE = false;
+      glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
+    else
+    {
+      DEBUG_MODE = true;
+      glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+  }
 }
 
 // glfw: window size changed, callback executes
@@ -267,6 +285,13 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 
 void mouse_callback(GLFWwindow *window, double xpos, double ypos)
 {
+
+  if (ImGuiIO &io = ImGui::GetIO(); io.WantCaptureMouse || DEBUG_MODE)
+  {
+    firstMouse = true;
+    return;
+  }
+
   if (firstMouse)
   {
     lastX = xpos;
