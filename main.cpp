@@ -19,6 +19,7 @@
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
+void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 
@@ -57,6 +58,7 @@ int main()
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
   glfwSetCursorPosCallback(window, mouse_callback);
   glfwSetScrollCallback(window, scroll_callback);
+  glfwSetKeyCallback(window, key_callback);
 
   // Capture mouse
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -169,11 +171,21 @@ int main()
 
     // Light rendering
     // ---------------------------------------------
-    auto lightColor = glm::vec3(1.0f, 1.0f, (float)sin(glfwGetTime()));
-    auto lightPos = glm::vec3(0.8f, (float)sin(glfwGetTime()), 0.8f);
+    struct Light
+    {
+      glm::vec3 pos;
+      glm::vec3 color;
+      glm::vec3 ambient;
+      glm::vec3 diffuse;
+      glm::vec3 specular;
+    };
+
+    Light light;
+    light.color = glm::vec3(1.0f, 1.0f, (float)sin(glfwGetTime()));
+    light.pos = glm::vec3(0.8f, (float)sin(glfwGetTime()), 0.8f);
 
     lightShader.use();
-    lightShader.setVec3("lightColor", lightColor);
+    lightShader.setVec3("lightColor", light.color);
 
     glm::mat4 projection = glm::perspective(glm::radians(camera.fov), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
     lightShader.setMat4("projection", projection);
@@ -182,7 +194,7 @@ int main()
     lightShader.setMat4("view", view);
 
     auto model = glm::mat4(1.0f);
-    model = glm::translate(model, lightPos);
+    model = glm::translate(model, light.pos);
     model = glm::scale(model, glm::vec3(0.01f));
 
     lightShader.setMat4("model", model);
@@ -194,10 +206,16 @@ int main()
     // Cube rendering
     // ---------------------------------------------
     cubeShader.use();
-    cubeShader.setVec3("objColor", glm::vec3(0.3f, 0.3f, 0.3f));
-    cubeShader.setVec3("lightColor", lightColor);
-    cubeShader.setVec3("lightPos", lightPos);
+
+    cubeShader.setVec3("light.color", light.color);
+    cubeShader.setVec3("light.pos", light.pos);
     cubeShader.setVec3("viewPos", camera.cameraPos);
+
+    cubeShader.setVec3("material.color", glm::vec3(0.3f, 0.3f, 0.3f));
+    cubeShader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+    cubeShader.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+    cubeShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+    cubeShader.setFloat("material.shininess", 32.0f);
 
     cubeShader.setMat4("projection", projection);
     cubeShader.setMat4("view", view);
@@ -261,8 +279,11 @@ void processInput(GLFWwindow *window)
     camera.processKeyboard(LEFT, deltaTime);
   if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
     camera.processKeyboard(RIGHT, deltaTime);
+}
 
-  if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS)
+void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
+{
+  if (key == GLFW_KEY_M && action == GLFW_PRESS)
   {
     if (DEBUG_MODE)
     {
