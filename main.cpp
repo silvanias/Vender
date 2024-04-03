@@ -59,6 +59,7 @@ int main()
   glfwSetCursorPosCallback(window, mouse_callback);
   glfwSetScrollCallback(window, scroll_callback);
   glfwSetKeyCallback(window, key_callback);
+  glfwSwapInterval(1);
 
   // Capture mouse
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -158,6 +159,42 @@ int main()
 
   auto clear_color = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
 
+  // Refactor this
+  // ---------------------------------------------
+
+  struct Light
+  {
+    glm::vec3 pos;
+    glm::vec3 color;
+    float ambient;
+    float diffuse;
+    float specular;
+  };
+
+  Light light;
+
+  light.pos = glm::vec3(0.5f, 1.2f, 0.4f);
+  light.color = glm::vec3(1.0f, 1.0f, 1.0f);
+  light.ambient = 0.2f;
+  light.diffuse = 0.9f;
+  light.specular = 1.0f;
+
+  struct Material
+  {
+    glm::vec3 color;
+    float ambient;
+    float diffuse;
+    glm::vec3 specular;
+    float shininess;
+  };
+
+  Material material;
+  material.color = glm::vec3(1.0f, 0.5f, 0.31f);
+  material.ambient = 1.0f;
+  material.diffuse = 1.0f;
+  material.specular = glm::vec3(0.5f, 0.5f, 0.5f);
+  material.shininess = 32.0f;
+
   // Render loop
   while (!glfwWindowShouldClose(window))
   {
@@ -170,19 +207,7 @@ int main()
     processInput(window);
 
     // Light rendering
-    // ---------------------------------------------
-    struct Light
-    {
-      glm::vec3 pos;
-      glm::vec3 color;
-      glm::vec3 ambient;
-      glm::vec3 diffuse;
-      glm::vec3 specular;
-    };
-
-    Light light;
-    light.color = glm::vec3(1.0f, 1.0f, (float)sin(glfwGetTime()));
-    light.pos = glm::vec3(0.8f, (float)sin(glfwGetTime()), 0.8f);
+    // -----------------------
 
     lightShader.use();
     lightShader.setVec3("lightColor", light.color);
@@ -206,16 +231,18 @@ int main()
     // Cube rendering
     // ---------------------------------------------
     cubeShader.use();
-
-    cubeShader.setVec3("light.color", light.color);
-    cubeShader.setVec3("light.pos", light.pos);
     cubeShader.setVec3("viewPos", camera.cameraPos);
 
-    cubeShader.setVec3("material.color", glm::vec3(0.3f, 0.3f, 0.3f));
-    cubeShader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
-    cubeShader.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
-    cubeShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
-    cubeShader.setFloat("material.shininess", 32.0f);
+    cubeShader.setVec3("light.pos", light.pos);
+    cubeShader.setVec3("light.ambient", light.ambient * light.color);
+    cubeShader.setVec3("light.diffuse", light.diffuse * light.color);
+    cubeShader.setVec3("light.specular", light.specular * light.color);
+
+    cubeShader.setVec3("material.color", material.color);
+    cubeShader.setVec3("material.ambient", material.ambient * material.color);
+    cubeShader.setVec3("material.diffuse", material.diffuse * material.color);
+    cubeShader.setVec3("material.specular", material.specular);
+    cubeShader.setFloat("material.shininess", material.shininess);
 
     cubeShader.setMat4("projection", projection);
     cubeShader.setMat4("view", view);
@@ -232,12 +259,22 @@ int main()
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
     ImGui::Begin("Controls");
-    if (ImGui::Button("DemoButton"))
+    ImGui::Text("FPS = %f", ImGui::GetIO().Framerate);
+    if (ImGui::CollapsingHeader("Light"))
     {
-      // Will activate when button clicked
+      ImGui::SliderFloat3("Pos", glm::value_ptr(light.pos), -2.0f, 2.0f);
+      ImGui::ColorPicker3("Color", glm::value_ptr(light.color));
+    }
+
+    if (ImGui::CollapsingHeader("Object"))
+    {
+      ImGui::ColorPicker3("MaterialColor", glm::value_ptr(material.color));
+      ImGui::SliderFloat("Ambient", &material.ambient, 0.0f, 1.0f);
+      ImGui::SliderFloat("Diffuse", &material.diffuse, 0.0f, 1.0f);
+      ImGui::SliderFloat("Shininess", &material.shininess, 1.0f, 200.0f);
+      ImGui::ColorPicker3("SpecularColor", glm::value_ptr(material.specular));
     }
     ImGui::End();
-
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -307,7 +344,7 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 void mouse_callback(GLFWwindow *window, double xpos, double ypos)
 {
 
-  if (ImGuiIO &io = ImGui::GetIO(); io.WantCaptureMouse || DEBUG_MODE)
+  if (const ImGuiIO &io = ImGui::GetIO(); io.WantCaptureMouse || DEBUG_MODE)
   {
     firstMouse = true;
     return;
@@ -330,5 +367,9 @@ void mouse_callback(GLFWwindow *window, double xpos, double ypos)
 
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
 {
+  if (const ImGuiIO &io = ImGui::GetIO(); io.WantCaptureMouse || DEBUG_MODE)
+  {
+    return;
+  }
   camera.processZoom(yoffset);
 }
