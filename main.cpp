@@ -23,8 +23,8 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 
-const GLint SCR_WIDTH = 800;
-const GLint SCR_HEIGHT = 600;
+GLint SCR_WIDTH = 800;
+GLint SCR_HEIGHT = 600;
 
 Camera camera;
 
@@ -79,10 +79,10 @@ int main()
   io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  // Enable Gamepad Controls
 
   ImGui::StyleColorsDark();
+  ImGui::SetNextWindowCollapsed(true);
 
   // Setup Platform/Renderer backends
   ImGui_ImplGlfw_InitForOpenGL(window, true); // Second param install_callback=true will install GLFW callbacks and chain to existing ones.
-
   ImGui_ImplOpenGL3_Init(glsl_version);
 
   glEnable(GL_DEPTH_TEST);
@@ -176,7 +176,7 @@ int main()
   light.pos = glm::vec3(0.5f, 1.2f, 0.4f);
   light.color = glm::vec3(1.0f, 1.0f, 1.0f);
   light.ambient = 0.2f;
-  light.diffuse = 0.9f;
+  light.diffuse = 0.5f;
   light.specular = 1.0f;
 
   struct Material
@@ -318,7 +318,7 @@ void processInput(GLFWwindow *window)
     camera.processKeyboard(RIGHT, deltaTime);
 }
 
-void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
+void key_callback(GLFWwindow *window, int key, int, int action, int)
 {
   if (key == GLFW_KEY_M && action == GLFW_PRESS)
   {
@@ -336,12 +336,14 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 }
 
 // glfw: window size changed, callback executes
-void framebuffer_size_callback(GLFWwindow *window, int width, int height)
+void framebuffer_size_callback(GLFWwindow *, int width, int height)
 {
   glViewport(0, 0, width, height);
+  SCR_HEIGHT = height;
+  SCR_WIDTH = width;
 }
 
-void mouse_callback(GLFWwindow *window, double xpos, double ypos)
+void mouse_callback(GLFWwindow *, double xpos, double ypos)
 {
 
   if (const ImGuiIO &io = ImGui::GetIO(); io.WantCaptureMouse || DEBUG_MODE)
