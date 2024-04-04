@@ -16,6 +16,7 @@
 #include "stb_image.h"
 #include "shader.h"
 #include "camera.h"
+#include "material.h"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -173,28 +174,14 @@ int main()
 
   Light light;
 
-  light.pos = glm::vec3(0.5f, 1.2f, 0.4f);
+  light.pos = glm::vec3(1.0f, 0.17f, 1.6f);
   light.color = glm::vec3(1.0f, 1.0f, 1.0f);
   light.ambient = 0.2f;
   light.diffuse = 0.5f;
   light.specular = 1.0f;
 
-  struct Material
-  {
-    glm::vec3 color;
-    float ambient;
-    float diffuse;
-    glm::vec3 specular;
-    float shininess;
-  };
-
-  Material material;
-  material.color = glm::vec3(1.0f, 0.5f, 0.31f);
-  material.ambient = 1.0f;
-  material.diffuse = 1.0f;
-  material.specular = glm::vec3(0.5f, 0.5f, 0.5f);
-  material.shininess = 32.0f;
-
+  Material material = generic_mat;
+  int selectedMaterial = 0;
   // Render loop
   while (!glfwWindowShouldClose(window))
   {
@@ -220,7 +207,7 @@ int main()
 
     auto model = glm::mat4(1.0f);
     model = glm::translate(model, light.pos);
-    model = glm::scale(model, glm::vec3(0.01f));
+    model = glm::scale(model, glm::vec3(0.2f));
 
     lightShader.setMat4("model", model);
 
@@ -268,6 +255,15 @@ int main()
 
     if (ImGui::CollapsingHeader("Object"))
     {
+      if (ImGui::RadioButton("Generic", &selectedMaterial, 0))
+      {
+        material = generic_mat;
+      }
+      else if (ImGui::RadioButton("Gold", &selectedMaterial, 1))
+      {
+        material = gold_mat;
+      }
+
       ImGui::ColorPicker3("MaterialColor", glm::value_ptr(material.color));
       ImGui::SliderFloat("Ambient", &material.ambient, 0.0f, 1.0f);
       ImGui::SliderFloat("Diffuse", &material.diffuse, 0.0f, 1.0f);
