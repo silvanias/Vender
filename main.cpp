@@ -72,16 +72,9 @@ int main()
   Shader cubeShader("../shaders/shader.vs", "../shaders/cubeShader.fs");
   Shader lightShader("../shaders/shader.vs", "../shaders/lightShader.fs");
   Cube cube;
-
+  Cube lightCube;
   auto [VBO, cubeVAO] = cube.setupBuffers();
-
-  unsigned int lightVAO;
-  glGenVertexArrays(1, &lightVAO);
-  glBindVertexArray(lightVAO);
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  // Position attribute
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid *)nullptr);
-  glEnableVertexAttribArray(0);
+  auto [VBOL, lightVAO] = lightCube.setupBuffers(VBO);
 
   auto clear_color = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
 
@@ -105,7 +98,7 @@ int main()
   light.diffuse = 0.5f;
   light.specular = 1.0f;
 
-  Material material = generic_mat;
+  Material material = mat_generic;
   int selectedMaterial = 0;
   // Render loop
   while (!glfwWindowShouldClose(window))
@@ -182,11 +175,11 @@ int main()
     {
       if (ImGui::RadioButton("Generic", &selectedMaterial, 0))
       {
-        material = generic_mat;
+        material = mat_generic;
       }
       else if (ImGui::RadioButton("Gold", &selectedMaterial, 1))
       {
-        material = gold_mat;
+        material = mat_gold;
       }
 
       ImGui::ColorPicker3("MaterialColor", glm::value_ptr(material.color));

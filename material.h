@@ -12,7 +12,7 @@ struct Material
     float shininess;
 };
 
-const Material generic_mat = {
+const Material mat_generic = {
     glm::vec3(0.5f, 0.5f, 0.5f), // color
     1.0f,                        // ambient
     1.0f,                        // diffuse
@@ -21,7 +21,7 @@ const Material generic_mat = {
 };
 
 // Metal approximation
-const Material gold_mat = {
+const Material mat_gold = {
     glm::vec3(1.0f, 0.84f, 0.0f), // color
     1.0f,                         // ambient
     1.0f,                         // diffuse

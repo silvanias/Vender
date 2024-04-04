@@ -22,6 +22,20 @@ public:
         return {VBO, VAO};
     }
 
+    // Overload with VBO (uses existing VBO)
+    // TODO: Specific for light at the moment, generalise later.
+    std::tuple<unsigned int, unsigned int> setupBuffers(unsigned int VBO)
+    {
+        unsigned int VAO;
+        glGenVertexArrays(1, &VAO);
+        glBindVertexArray(VAO);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        // Position attribute
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid *)nullptr);
+        glEnableVertexAttribArray(0);
+        return {VBO, VAO};
+    }
+
 private:
     const std::array<float, 216> vertices = {
         -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
