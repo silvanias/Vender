@@ -17,7 +17,10 @@
 #include "shader.h"
 #include "camera.h"
 #include "material.h"
+#include "models/cube_model.h"
 
+GLFWwindow *createWindow();
+void setupGLFWCallbacks(GLFWwindow *window);
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
@@ -42,14 +45,7 @@ bool DEBUG_MODE = false;
 
 int main()
 {
-
-  glfwInit();
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // safe on mac
-
-  GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "vender", nullptr, nullptr);
+  GLFWwindow *window = createWindow();
   if (window == nullptr)
   {
     std::cout << "Failed to create GLFW window" << std::endl;
@@ -57,10 +53,7 @@ int main()
     return -1;
   }
   glfwMakeContextCurrent(window);
-  glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-  glfwSetCursorPosCallback(window, mouse_callback);
-  glfwSetScrollCallback(window, scroll_callback);
-  glfwSetKeyCallback(window, key_callback);
+  setupGLFWCallbacks(window);
   glfwSwapInterval(1);
 
   // Capture mouse
@@ -78,65 +71,9 @@ int main()
 
   Shader cubeShader("../shaders/shader.vs", "../shaders/cubeShader.fs");
   Shader lightShader("../shaders/shader.vs", "../shaders/lightShader.fs");
+  Cube cube;
 
-  // Set up vertices
-  std::array<float, 216> vertices = {
-      -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
-      0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
-      0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
-      0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
-      -0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
-      -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
-
-      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
-      0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
-      0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
-      0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
-      -0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
-      -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
-
-      -0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f,
-      -0.5f, 0.5f, -0.5f, -1.0f, 0.0f, 0.0f,
-      -0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f,
-      -0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f,
-      -0.5f, -0.5f, 0.5f, -1.0f, 0.0f, 0.0f,
-      -0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f,
-
-      0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f,
-      0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
-      0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
-      0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
-      0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f,
-      0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f,
-
-      -0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,
-      0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,
-      0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f,
-      0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f,
-      -0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f,
-      -0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,
-
-      -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-      0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-      0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f,
-      0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f,
-      -0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f,
-      -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f};
-
-  unsigned int VBO;
-
-  unsigned int cubeVAO;
-  glGenVertexArrays(1, &cubeVAO);
-  glGenBuffers(1, &VBO);
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices.data(), GL_STATIC_DRAW);
-  glBindVertexArray(cubeVAO);
-  // Position attribute
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid *)nullptr);
-  glEnableVertexAttribArray(0);
-  // Normal attribute
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid *)(3 * sizeof(float)));
-  glEnableVertexAttribArray(1);
+  auto [VBO, cubeVAO] = cube.setupBuffers();
 
   unsigned int lightVAO;
   glGenVertexArrays(1, &lightVAO);
@@ -377,4 +314,23 @@ void initImGui(GLFWwindow *window)
   // Setup Platform/Renderer backends
   ImGui_ImplGlfw_InitForOpenGL(window, true); // Second param install_callback=true will install GLFW callbacks and chain to existing ones.
   ImGui_ImplOpenGL3_Init(glsl_version);
+}
+
+GLFWwindow *createWindow()
+{
+  glfwInit();
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // safe on mac
+
+  return glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "vender", nullptr, nullptr);
+}
+
+void setupGLFWCallbacks(GLFWwindow *window)
+{
+  glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+  glfwSetCursorPosCallback(window, mouse_callback);
+  glfwSetScrollCallback(window, scroll_callback);
+  glfwSetKeyCallback(window, key_callback);
 }

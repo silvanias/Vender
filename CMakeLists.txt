@@ -18,6 +18,7 @@ set(APP_SOURCES
     stb_load.cpp
     camera.h
     material.h
+    models/cube_model.h
 )
 
 set(IMGUI_SOURCES
