@@ -5,7 +5,7 @@ class ICube
 {
 public:
     virtual std::tuple<unsigned int, unsigned int> setupBuffers() = 0;
-    virtual std::tuple<unsigned int, unsigned int> setupBuffers(unsigned int VBO) = 0;
+    // virtual std::tuple<unsigned int, unsigned int> setupBuffers(unsigned int VBO) = 0;
     virtual ~ICube() = default;
 };
 
@@ -32,17 +32,17 @@ public:
 
     // Overload with VBO (uses existing VBO)
     // TODO: Specific for light at the moment, generalise later.
-    std::tuple<unsigned int, unsigned int> setupBuffers(unsigned int VBO) override
-    {
-        unsigned int VAO;
-        glGenVertexArrays(1, &VAO);
-        glBindVertexArray(VAO);
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        // Position attribute
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid *)nullptr);
-        glEnableVertexAttribArray(0);
-        return {VBO, VAO};
-    }
+    // std::tuple<unsigned int, unsigned int> setupBuffers(unsigned int VBO) override
+    // {
+    //     unsigned int VAO;
+    //     glGenVertexArrays(1, &VAO);
+    //     glBindVertexArray(VAO);
+    //     glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    //     // Position attribute
+    //     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid *)nullptr);
+    //     glEnableVertexAttribArray(0);
+    //     return {VBO, VAO};
+    // }
 
 private:
     const std::array<float, 216> vertices = {
@@ -89,7 +89,7 @@ private:
         -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f};
 };
 
-class CubeTextured : public ICube
+class CubeTex : public ICube
 {
 public:
     std::tuple<unsigned int, unsigned int> setupBuffers() override

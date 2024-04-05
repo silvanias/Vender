@@ -27,6 +27,7 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 void initImGui(GLFWwindow *window);
+unsigned int loadTexture(const char *path);
 
 GLint SCR_WIDTH = 800;
 GLint SCR_HEIGHT = 600;
@@ -69,12 +70,16 @@ int main()
 
   glEnable(GL_DEPTH_TEST);
 
-  Shader cubeShader("../shaders/shader.vs", "../shaders/cube_generic.fs");
-  Shader lightShader("../shaders/shader.vs", "../shaders/light.fs");
+  Shader cubeShader("../shaders/cube_generic.vs", "../shaders/cube_generic.fs");
+  Shader cubeTexShader("../shaders/cube_textured.vs", "../shaders/cube_textured.fs");
+  Shader lightShader("../shaders/cube_generic.vs", "../shaders/light.fs");
+
   CubeDefault cube;
+  CubeTex cubeTex;
   CubeDefault lightCube;
   auto [VBO, cubeVAO] = cube.setupBuffers();
-  auto [VBOL, lightVAO] = lightCube.setupBuffers(VBO);
+  auto [VBOT, cubeTexVAO] = cubeTex.setupBuffers();
+  auto [VBOL, lightVAO] = lightCube.setupBuffers();
 
   auto clear_color = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);
 
@@ -99,8 +104,19 @@ int main()
   light.specular = 1.0f;
 
   Material material = mat_generic;
+  unsigned int diffuseMap = loadTexture("../resources/container2.png");
+
+  // shader configuration
+  // --------------------
+  cubeTexShader.use();
+  cubeTexShader.setInt("material.diffuse", 0);
+
+  // ImGui configuration
+  // --------------------
   int selectedMaterial = 0;
+
   // Render loop
+  // --------------------
   while (!glfwWindowShouldClose(window))
   {
     auto currentFrame = static_cast<float>(glfwGetTime());
@@ -113,7 +129,6 @@ int main()
 
     // Light rendering
     // -----------------------
-
     lightShader.use();
     lightShader.setVec3("lightColor", light.color);
 
@@ -133,28 +148,54 @@ int main()
     glBindVertexArray(lightVAO);
     glDrawArrays(GL_TRIANGLES, 0, 36);
 
-    // Cube rendering
+    // GENERIC cube rendering
     // ---------------------------------------------
-    cubeShader.use();
-    cubeShader.setVec3("viewPos", camera.cameraPos);
+    // cubeShader.use();
+    // cubeShader.setVec3("viewPos", camera.cameraPos);
 
-    cubeShader.setVec3("light.pos", light.pos);
-    cubeShader.setVec3("light.ambient", light.ambient * light.color);
-    cubeShader.setVec3("light.diffuse", light.diffuse * light.color);
-    cubeShader.setVec3("light.specular", light.specular * light.color);
+    // cubeShader.setVec3("light.pos", light.pos);
+    // cubeShader.setVec3("light.ambient", light.ambient * light.color);
+    // cubeShader.setVec3("light.diffuse", light.diffuse * light.color);
+    // cubeShader.setVec3("light.specular", light.specular * light.color);
 
-    cubeShader.setVec3("material.ambient", material.ambient);
-    cubeShader.setVec3("material.diffuse", material.diffuse);
-    cubeShader.setVec3("material.specular", material.specular);
-    cubeShader.setFloat("material.shininess", material.shininess);
+    // cubeShader.setVec3("material.ambient", material.ambient);
+    // cubeShader.setVec3("material.diffuse", material.diffuse);
+    // cubeShader.setVec3("material.specular", material.specular);
+    // cubeShader.setFloat("material.shininess", material.shininess);
 
-    cubeShader.setMat4("projection", projection);
-    cubeShader.setMat4("view", view);
+    // cubeShader.setMat4("projection", projection);
+    // cubeShader.setMat4("view", view);
+    // model = glm::mat4(1.0f);
+    // cubeShader.setMat4("model", model);
+
+    // // Draw the cube
+    // glBindVertexArray(cubeVAO);
+    // glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // TEXTURED cube rendering
+    // ---------------------------------------------
+    cubeTexShader.use();
+    cubeTexShader.setVec3("viewPos", camera.cameraPos);
+
+    cubeTexShader.setVec3("light.pos", light.pos);
+    cubeTexShader.setVec3("light.ambient", light.ambient * light.color);
+    cubeTexShader.setVec3("light.diffuse", light.diffuse * light.color);
+    cubeTexShader.setVec3("light.specular", light.specular * light.color);
+
+    cubeTexShader.setVec3("material.specular", material.specular);
+    cubeTexShader.setFloat("material.shininess", material.shininess);
+
+    cubeTexShader.setMat4("projection", projection);
+    cubeTexShader.setMat4("view", view);
     model = glm::mat4(1.0f);
-    cubeShader.setMat4("model", model);
+    cubeTexShader.setMat4("model", model);
 
-    // Draw the cube
-    glBindVertexArray(cubeVAO);
+    // bind diffuse map
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, diffuseMap);
+
+    // Draw the cubeTex
+    glBindVertexArray(cubeTexVAO);
     glDrawArrays(GL_TRIANGLES, 0, 36);
 
     // Render UI
@@ -199,6 +240,7 @@ int main()
   glDeleteVertexArrays(1, &cubeVAO);
   glDeleteVertexArrays(1, &lightVAO);
   glDeleteBuffers(1, &VBO);
+  glDeleteBuffers(1, &VBOL);
 
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
@@ -324,4 +366,45 @@ void setupGLFWCallbacks(GLFWwindow *window)
   glfwSetCursorPosCallback(window, mouse_callback);
   glfwSetScrollCallback(window, scroll_callback);
   glfwSetKeyCallback(window, key_callback);
+}
+
+// utility function for loading a 2D texture from file
+// ---------------------------------------------------
+unsigned int loadTexture(char const *path)
+{
+  unsigned int textureID;
+  glGenTextures(1, &textureID);
+
+  int width;
+  int height;
+  int nrComponents;
+  unsigned char *data = stbi_load(path, &width, &height, &nrComponents, 0);
+  if (data)
+  {
+    GLenum format;
+    if (nrComponents == 1)
+      format = GL_RED;
+    else if (nrComponents == 3)
+      format = GL_RGB;
+    else if (nrComponents == 4)
+      format = GL_RGBA;
+
+    glBindTexture(GL_TEXTURE_2D, textureID);
+    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    stbi_image_free(data);
+  }
+  else
+  {
+    std::cout << "Texture failed to load at path: " << path << std::endl;
+    stbi_image_free(data);
+  }
+
+  return textureID;
 }

@@ -1,9 +1,5 @@
 #version 330 core
-
-in vec3 FragPos;
-in vec3 Normal;
-
-uniform vec3 viewPos;
+out vec4 FragColor;
 
 struct Material {
     vec3 ambient;
@@ -11,8 +7,6 @@ struct Material {
     vec3 specular;
     float shininess;
 }; 
-  
-uniform Material material;
 
 struct Light {
     vec3 pos;
@@ -22,10 +16,12 @@ struct Light {
     vec3 specular;
 };
 
+in vec3 FragPos;
+in vec3 Normal;
+
+uniform vec3 viewPos;
+uniform Material material;
 uniform Light light;  
-
-
-out vec4 FragColor;
 
 void main()
 {
