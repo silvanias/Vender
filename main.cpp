@@ -76,7 +76,7 @@ int main()
   auto [VBO, cubeVAO] = cube.setupBuffers();
   auto [VBOL, lightVAO] = lightCube.setupBuffers(VBO);
 
-  auto clear_color = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
+  auto clear_color = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);
 
   // Refactor this
   // ---------------------------------------------
@@ -143,9 +143,8 @@ int main()
     cubeShader.setVec3("light.diffuse", light.diffuse * light.color);
     cubeShader.setVec3("light.specular", light.specular * light.color);
 
-    cubeShader.setVec3("material.color", material.color);
-    cubeShader.setVec3("material.ambient", material.ambient * material.color);
-    cubeShader.setVec3("material.diffuse", material.diffuse * material.color);
+    cubeShader.setVec3("material.ambient", material.ambient);
+    cubeShader.setVec3("material.diffuse", material.diffuse);
     cubeShader.setVec3("material.specular", material.specular);
     cubeShader.setFloat("material.shininess", material.shininess);
 
@@ -182,11 +181,10 @@ int main()
         material = mat_gold;
       }
 
-      ImGui::ColorPicker3("MaterialColor", glm::value_ptr(material.color));
-      ImGui::SliderFloat("Ambient", &material.ambient, 0.0f, 1.0f);
-      ImGui::SliderFloat("Diffuse", &material.diffuse, 0.0f, 1.0f);
-      ImGui::SliderFloat("Shininess", &material.shininess, 1.0f, 200.0f);
+      ImGui::ColorPicker3("Ambient", glm::value_ptr(material.ambient));
+      ImGui::ColorPicker3("Diffuse", glm::value_ptr(material.diffuse));
       ImGui::ColorPicker3("SpecularColor", glm::value_ptr(material.specular));
+      ImGui::SliderFloat("Shininess", &material.shininess, 1.0f, 200.0f);
     }
     ImGui::End();
     ImGui::Render();
