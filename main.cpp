@@ -150,53 +150,59 @@ int main()
 
     // GENERIC cube rendering
     // ---------------------------------------------
-    // cubeShader.use();
-    // cubeShader.setVec3("viewPos", camera.cameraPos);
+    if (selectedMaterial < 2)
+    {
+      cubeShader.use();
+      cubeShader.setVec3("viewPos", camera.cameraPos);
 
-    // cubeShader.setVec3("light.pos", light.pos);
-    // cubeShader.setVec3("light.ambient", light.ambient * light.color);
-    // cubeShader.setVec3("light.diffuse", light.diffuse * light.color);
-    // cubeShader.setVec3("light.specular", light.specular * light.color);
+      cubeShader.setVec3("light.pos", light.pos);
+      cubeShader.setVec3("light.ambient", light.ambient * light.color);
+      cubeShader.setVec3("light.diffuse", light.diffuse * light.color);
+      cubeShader.setVec3("light.specular", light.specular * light.color);
 
-    // cubeShader.setVec3("material.ambient", material.ambient);
-    // cubeShader.setVec3("material.diffuse", material.diffuse);
-    // cubeShader.setVec3("material.specular", material.specular);
-    // cubeShader.setFloat("material.shininess", material.shininess);
+      cubeShader.setVec3("material.ambient", material.ambient);
+      cubeShader.setVec3("material.diffuse", material.diffuse);
+      cubeShader.setVec3("material.specular", material.specular);
+      cubeShader.setFloat("material.shininess", material.shininess);
 
-    // cubeShader.setMat4("projection", projection);
-    // cubeShader.setMat4("view", view);
-    // model = glm::mat4(1.0f);
-    // cubeShader.setMat4("model", model);
+      cubeShader.setMat4("projection", projection);
+      cubeShader.setMat4("view", view);
+      model = glm::mat4(1.0f);
+      cubeShader.setMat4("model", model);
 
-    // // Draw the cube
-    // glBindVertexArray(cubeVAO);
-    // glDrawArrays(GL_TRIANGLES, 0, 36);
+      // Draw the cube
+      glBindVertexArray(cubeVAO);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
 
     // TEXTURED cube rendering
     // ---------------------------------------------
-    cubeTexShader.use();
-    cubeTexShader.setVec3("viewPos", camera.cameraPos);
+    if (selectedMaterial == 2)
+    {
+      cubeTexShader.use();
+      cubeTexShader.setVec3("viewPos", camera.cameraPos);
 
-    cubeTexShader.setVec3("light.pos", light.pos);
-    cubeTexShader.setVec3("light.ambient", light.ambient * light.color);
-    cubeTexShader.setVec3("light.diffuse", light.diffuse * light.color);
-    cubeTexShader.setVec3("light.specular", light.specular * light.color);
+      cubeTexShader.setVec3("light.pos", light.pos);
+      cubeTexShader.setVec3("light.ambient", light.ambient * light.color);
+      cubeTexShader.setVec3("light.diffuse", light.diffuse * light.color);
+      cubeTexShader.setVec3("light.specular", light.specular * light.color);
 
-    cubeTexShader.setVec3("material.specular", material.specular);
-    cubeTexShader.setFloat("material.shininess", material.shininess);
+      cubeTexShader.setVec3("material.specular", material.specular);
+      cubeTexShader.setFloat("material.shininess", material.shininess);
 
-    cubeTexShader.setMat4("projection", projection);
-    cubeTexShader.setMat4("view", view);
-    model = glm::mat4(1.0f);
-    cubeTexShader.setMat4("model", model);
+      cubeTexShader.setMat4("projection", projection);
+      cubeTexShader.setMat4("view", view);
+      model = glm::mat4(1.0f);
+      cubeTexShader.setMat4("model", model);
 
-    // bind diffuse map
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, diffuseMap);
+      // bind diffuse map
+      glActiveTexture(GL_TEXTURE0);
+      glBindTexture(GL_TEXTURE_2D, diffuseMap);
 
-    // Draw the cubeTex
-    glBindVertexArray(cubeTexVAO);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
+      // Draw the cubeTex
+      glBindVertexArray(cubeTexVAO);
+      glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
 
     // Render UI
     // ---------------------------------------------
@@ -220,6 +226,10 @@ int main()
       else if (ImGui::RadioButton("Gold", &selectedMaterial, 1))
       {
         material = mat_gold;
+      }
+      else if (ImGui::RadioButton("Container", &selectedMaterial, 2))
+      {
+        // blah
       }
 
       ImGui::ColorPicker3("Ambient", glm::value_ptr(material.ambient));
