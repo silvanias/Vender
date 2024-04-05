@@ -69,10 +69,10 @@ int main()
 
   glEnable(GL_DEPTH_TEST);
 
-  Shader cubeShader("../shaders/shader.vs", "../shaders/cubeShader.fs");
-  Shader lightShader("../shaders/shader.vs", "../shaders/lightShader.fs");
-  Cube cube;
-  Cube lightCube;
+  Shader cubeShader("../shaders/shader.vs", "../shaders/cube_generic.fs");
+  Shader lightShader("../shaders/shader.vs", "../shaders/light.fs");
+  CubeDefault cube;
+  CubeDefault lightCube;
   auto [VBO, cubeVAO] = cube.setupBuffers();
   auto [VBOL, lightVAO] = lightCube.setupBuffers(VBO);
 
