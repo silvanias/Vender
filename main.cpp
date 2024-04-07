@@ -105,11 +105,13 @@ int main()
 
   Material material = mat_generic;
   unsigned int diffuseMap = loadTexture("../resources/container2.png");
+  unsigned int specularMap = loadTexture("../resources/container2_specular.png");
 
   // shader configuration
   // --------------------
   cubeTexShader.use();
   cubeTexShader.setInt("material.diffuse", 0);
+  cubeTexShader.setInt("material.specular", 1);
 
   // ImGui configuration
   // --------------------
@@ -195,9 +197,13 @@ int main()
       model = glm::mat4(1.0f);
       cubeTexShader.setMat4("model", model);
 
-      // bind diffuse map
+      // Bind diffuse map
       glActiveTexture(GL_TEXTURE0);
       glBindTexture(GL_TEXTURE_2D, diffuseMap);
+
+      // Bind specular map
+      glActiveTexture(GL_TEXTURE1);
+      glBindTexture(GL_TEXTURE_2D, specularMap);
 
       // Draw the cubeTex
       glBindVertexArray(cubeTexVAO);

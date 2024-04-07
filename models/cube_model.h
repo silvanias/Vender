@@ -107,7 +107,7 @@ public:
         // Normal attribute
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (GLvoid *)(3 * sizeof(float)));
         glEnableVertexAttribArray(1);
-        // Position attribute
+        // Texture attribute
         glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (GLvoid *)(6 * sizeof(float)));
         glEnableVertexAttribArray(2);
 
