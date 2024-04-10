@@ -107,7 +107,7 @@ int main()
   unsigned int diffuseMap = loadTexture("../resources/container2.png");
   unsigned int specularMap = loadTexture("../resources/container2_specular.png");
 
-  // shader configuration
+  // Shader configuration
   // --------------------
   cubeTexShader.use();
   cubeTexShader.setInt("material.diffuse", 0);
