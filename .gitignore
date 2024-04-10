@@ -2,3 +2,6 @@ vcpkg
 build
 .vscode
 .DS_Store
+imgui
+venv
+docs/
