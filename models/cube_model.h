@@ -150,6 +150,50 @@ public:
         glGenVertexArrays(1, &VAO);
 
         const auto vertPosSize = sizeof(vertPos);
+
+        const auto BUFFER_SIZE = vertPosSize;
+
+        glGenBuffers(1, &VBO);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferData(GL_ARRAY_BUFFER, BUFFER_SIZE, nullptr, GL_STATIC_DRAW);
+
+        glBufferSubData(GL_ARRAY_BUFFER, 0, vertPosSize, vertPos.data());
+        glBufferSubData(GL_ARRAY_BUFFER, normOffset, vertNormSize, vertNorm.data());
+
+        glBindVertexArray(VAO);
+
+        // Position attribute
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (GLvoid *)nullptr);
+        glEnableVertexAttribArray(0);
+
+        return {VBO, VAO};
+
+        // Overload with VBO (uses existing VBO)
+        // TODO: Specific for light at the moment, generalise later.
+        // std::tuple<unsigned int, unsigned int> setupBuffers(unsigned int VBO) override
+        // {
+        //     unsigned int VAO;
+        //     glGenVertexArrays(1, &VAO);
+        //     glBindVertexArray(VAO);
+        //     glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        //     // Position attribute
+        //     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid *)nullptr);
+        //     glEnableVertexAttribArray(0);
+        //     return {VBO, VAO};
+        // }
+    };
+};
+
+class CubeNorm : public AbstractCube
+{
+public:
+    std::tuple<unsigned int, unsigned int> setupBuffers() override
+    {
+        unsigned int VBO;
+        unsigned int VAO;
+        glGenVertexArrays(1, &VAO);
+
+        const auto vertPosSize = sizeof(vertPos);
         const auto vertNormSize = sizeof(vertNorm);
 
         const auto BUFFER_SIZE = vertPosSize + vertNormSize;
@@ -172,20 +216,6 @@ public:
         glEnableVertexAttribArray(1);
 
         return {VBO, VAO};
-
-        // Overload with VBO (uses existing VBO)
-        // TODO: Specific for light at the moment, generalise later.
-        // std::tuple<unsigned int, unsigned int> setupBuffers(unsigned int VBO) override
-        // {
-        //     unsigned int VAO;
-        //     glGenVertexArrays(1, &VAO);
-        //     glBindVertexArray(VAO);
-        //     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        //     // Position attribute
-        //     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (GLvoid *)nullptr);
-        //     glEnableVertexAttribArray(0);
-        //     return {VBO, VAO};
-        // }
     };
 };
 
