@@ -158,7 +158,6 @@ public:
         glBufferData(GL_ARRAY_BUFFER, BUFFER_SIZE, nullptr, GL_STATIC_DRAW);
 
         glBufferSubData(GL_ARRAY_BUFFER, 0, vertPosSize, vertPos.data());
-        glBufferSubData(GL_ARRAY_BUFFER, normOffset, vertNormSize, vertNorm.data());
 
         glBindVertexArray(VAO);
 
