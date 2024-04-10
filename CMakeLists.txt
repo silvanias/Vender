@@ -19,6 +19,7 @@ set(APP_SOURCES
     camera.h
     material.h
     models/cube_model.h
+    models/pyramid_model.h
 )
 
 set(IMGUI_SOURCES

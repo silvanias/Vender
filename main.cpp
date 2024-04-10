@@ -18,6 +18,7 @@
 #include "camera.h"
 #include "material.h"
 #include "models/cube_model.h"
+#include "models/pyramid_model.h"
 
 GLFWwindow *createWindow();
 void setupGLFWCallbacks(GLFWwindow *window);
@@ -67,6 +68,7 @@ int main()
   }
 
   initImGui(window);
+  auto clear_color = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);
 
   glEnable(GL_DEPTH_TEST);
 
@@ -76,12 +78,22 @@ int main()
 
   CubeNorm cubeNorm;
   CubeTex cubeTex;
+  PyramidNorm pyramidNorm;
   CubeDefault lightCube;
   auto [VBOCubeNorm, VAOCubeNorm] = cubeNorm.setupBuffers();
   auto [VBOCubeTex, VAOCubeTex] = cubeTex.setupBuffers();
+  auto [VBOPyramidNorm, VAOPyramidNorm] = pyramidNorm.setupBuffers();
   auto [VBOLight, VAOLight] = lightCube.setupBuffers();
 
-  auto clear_color = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);
+  Material material = mat_generic;
+  unsigned int diffuseMap = loadTexture("../resources/container2.png");
+  unsigned int specularMap = loadTexture("../resources/container2_specular.png");
+
+  // Shader configuration
+  // --------------------
+  cubeTexShader.use();
+  cubeTexShader.setInt("material.diffuse", 0);
+  cubeTexShader.setInt("material.specular", 1);
 
   // TODO: Refactor this
   // ---------------------------------------------
@@ -102,16 +114,6 @@ int main()
   light.ambient = 0.2f;
   light.diffuse = 0.5f;
   light.specular = 1.0f;
-
-  Material material = mat_generic;
-  unsigned int diffuseMap = loadTexture("../resources/container2.png");
-  unsigned int specularMap = loadTexture("../resources/container2_specular.png");
-
-  // Shader configuration
-  // --------------------
-  cubeTexShader.use();
-  cubeTexShader.setInt("material.diffuse", 0);
-  cubeTexShader.setInt("material.specular", 1);
 
   // ImGui configuration
   // --------------------
@@ -175,6 +177,13 @@ int main()
       // Draw the cube
       glBindVertexArray(VAOCubeNorm);
       glDrawArrays(GL_TRIANGLES, 0, 36);
+
+      // TODO: Fix this whole ordeal
+      // Temporary Pyramid Rendering
+      model = glm::translate(model, glm::vec3(-1.0f, 0.0f, 0.0f));
+      cubeShader.setMat4("model", model);
+      glBindVertexArray(VAOPyramidNorm);
+      glDrawArrays(GL_TRIANGLES, 0, 18);
     }
 
     // Textured cube rendering
