@@ -1,0 +1,301 @@
+\doxysection{Shader Class Reference}
+\hypertarget{class_shader}{}\label{class_shader}\index{Shader@{Shader}}
+
+
+{\ttfamily \#include $<$shader.\+h$>$}
+
+
+
+Collaboration diagram for Shader\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=550pt]{class_shader__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_shader_a3e135bbf914b087a939114d79c10d283}{Shader}} (const char \texorpdfstring{$\ast$}{*}vertex\+Path, const char \texorpdfstring{$\ast$}{*}fragment\+Path)
+\item 
+void \mbox{\hyperlink{class_shader_a3c7896754f0e1fca8bde860cfef63832}{use}} () const
+\item 
+void \mbox{\hyperlink{class_shader_a28cc10c039263b1fdcdee1427cbf1d4f}{del}} () const
+\item 
+void \mbox{\hyperlink{class_shader_ab1a56d6c299bd7eaa18c2e142ef7bd9f}{set\+Bool}} (const std\+::string \&name, bool value) const
+\item 
+void \mbox{\hyperlink{class_shader_ad362e2b654cd95a3574cd505411e41fd}{set\+Int}} (const std\+::string \&name, int value) const
+\item 
+void \mbox{\hyperlink{class_shader_afe7367621f74c2d26431d8ac15252bf3}{set\+Float}} (const std\+::string \&name, float value) const
+\item 
+void \mbox{\hyperlink{class_shader_afd4d41322a1cdd1d5155bf124d19debf}{set\+Vec2}} (const std\+::string \&name, const glm\+::vec2 \&value) const
+\item 
+void \mbox{\hyperlink{class_shader_afb91bc9e954bf590857c96ab1331b0ec}{set\+Vec2}} (const std\+::string \&name, float x, float y) const
+\item 
+void \mbox{\hyperlink{class_shader_aeb021061c5d451329d92257b07dbfec3}{set\+Vec3}} (const std\+::string \&name, const glm\+::vec3 \&value) const
+\item 
+void \mbox{\hyperlink{class_shader_a90092c25b7dc23964c465b93887300f9}{set\+Vec3}} (const std\+::string \&name, float x, float y, float z) const
+\item 
+void \mbox{\hyperlink{class_shader_a79cbe674f6bf1a576a48045dcb924de5}{set\+Vec4}} (const std\+::string \&name, const glm\+::vec4 \&value) const
+\item 
+void \mbox{\hyperlink{class_shader_ad7906b3a47e6f2d62ec79f4c871aadb1}{set\+Vec4}} (const std\+::string \&name, float x, float y, float z, float w) const
+\item 
+void \mbox{\hyperlink{class_shader_a91a6ee79b959cacd618c9e29a5bbd732}{set\+Mat2}} (const std\+::string \&name, const glm\+::mat2 \&mat) const
+\item 
+void \mbox{\hyperlink{class_shader_a3e24fcad187493dfebaa12939072e91d}{set\+Mat3}} (const std\+::string \&name, const glm\+::mat3 \&mat) const
+\item 
+void \mbox{\hyperlink{class_shader_a8e711c96f3e1722cbfb88fde9478977c}{set\+Mat4}} (const std\+::string \&name, const glm\+::mat4 \&mat) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+unsigned int \mbox{\hyperlink{class_shader_a142a08b6fbdfc982d82ca10ee0b0f38d}{ID}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_shader_a794160d5fb1e1c842b90cee50feb6537}{check\+Compile\+Errors}} (unsigned int shader, const std\+::string \&type) const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Definition at line \mbox{\hyperlink{shader_8h_source_l00011}{11}} of file \mbox{\hyperlink{shader_8h_source}{shader.\+h}}.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_shader_a3e135bbf914b087a939114d79c10d283}\label{class_shader_a3e135bbf914b087a939114d79c10d283} 
+\index{Shader@{Shader}!Shader@{Shader}}
+\index{Shader@{Shader}!Shader@{Shader}}
+\doxysubsubsection{\texorpdfstring{Shader()}{Shader()}}
+{\footnotesize\ttfamily Shader\+::\+Shader (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{vertex\+Path,  }\item[{const char \texorpdfstring{$\ast$}{*}}]{fragment\+Path }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{shader_8h_source_l00018}{18}} of file \mbox{\hyperlink{shader_8h_source}{shader.\+h}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=341pt]{class_shader_a3e135bbf914b087a939114d79c10d283_cgraph}
+\end{center}
+\end{figure}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_shader_a794160d5fb1e1c842b90cee50feb6537}\label{class_shader_a794160d5fb1e1c842b90cee50feb6537} 
+\index{Shader@{Shader}!checkCompileErrors@{checkCompileErrors}}
+\index{checkCompileErrors@{checkCompileErrors}!Shader@{Shader}}
+\doxysubsubsection{\texorpdfstring{checkCompileErrors()}{checkCompileErrors()}}
+{\footnotesize\ttfamily void Shader\+::check\+Compile\+Errors (\begin{DoxyParamCaption}\item[{unsigned int}]{shader,  }\item[{const std\+::string \&}]{type }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}
+
+
+
+Definition at line \mbox{\hyperlink{shader_8h_source_l00137}{137}} of file \mbox{\hyperlink{shader_8h_source}{shader.\+h}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=341pt]{class_shader_a794160d5fb1e1c842b90cee50feb6537_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_shader_a28cc10c039263b1fdcdee1427cbf1d4f}\label{class_shader_a28cc10c039263b1fdcdee1427cbf1d4f} 
+\index{Shader@{Shader}!del@{del}}
+\index{del@{del}!Shader@{Shader}}
+\doxysubsubsection{\texorpdfstring{del()}{del()}}
+{\footnotesize\ttfamily void Shader\+::del (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{shader_8h_source_l00082}{82}} of file \mbox{\hyperlink{shader_8h_source}{shader.\+h}}.
+
+\Hypertarget{class_shader_ab1a56d6c299bd7eaa18c2e142ef7bd9f}\label{class_shader_ab1a56d6c299bd7eaa18c2e142ef7bd9f} 
+\index{Shader@{Shader}!setBool@{setBool}}
+\index{setBool@{setBool}!Shader@{Shader}}
+\doxysubsubsection{\texorpdfstring{setBool()}{setBool()}}
+{\footnotesize\ttfamily void Shader\+::set\+Bool (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name,  }\item[{bool}]{value }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{shader_8h_source_l00087}{87}} of file \mbox{\hyperlink{shader_8h_source}{shader.\+h}}.
+
+\Hypertarget{class_shader_afe7367621f74c2d26431d8ac15252bf3}\label{class_shader_afe7367621f74c2d26431d8ac15252bf3} 
+\index{Shader@{Shader}!setFloat@{setFloat}}
+\index{setFloat@{setFloat}!Shader@{Shader}}
+\doxysubsubsection{\texorpdfstring{setFloat()}{setFloat()}}
+{\footnotesize\ttfamily void Shader\+::set\+Float (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name,  }\item[{float}]{value }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{shader_8h_source_l00095}{95}} of file \mbox{\hyperlink{shader_8h_source}{shader.\+h}}.
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=241pt]{class_shader_afe7367621f74c2d26431d8ac15252bf3_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_shader_ad362e2b654cd95a3574cd505411e41fd}\label{class_shader_ad362e2b654cd95a3574cd505411e41fd} 
+\index{Shader@{Shader}!setInt@{setInt}}
+\index{setInt@{setInt}!Shader@{Shader}}
+\doxysubsubsection{\texorpdfstring{setInt()}{setInt()}}
+{\footnotesize\ttfamily void Shader\+::set\+Int (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name,  }\item[{int}]{value }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{shader_8h_source_l00091}{91}} of file \mbox{\hyperlink{shader_8h_source}{shader.\+h}}.
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=231pt]{class_shader_ad362e2b654cd95a3574cd505411e41fd_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_shader_a91a6ee79b959cacd618c9e29a5bbd732}\label{class_shader_a91a6ee79b959cacd618c9e29a5bbd732} 
+\index{Shader@{Shader}!setMat2@{setMat2}}
+\index{setMat2@{setMat2}!Shader@{Shader}}
+\doxysubsubsection{\texorpdfstring{setMat2()}{setMat2()}}
+{\footnotesize\ttfamily void Shader\+::set\+Mat2 (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name,  }\item[{const glm\+::mat2 \&}]{mat }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{shader_8h_source_l00123}{123}} of file \mbox{\hyperlink{shader_8h_source}{shader.\+h}}.
+
+\Hypertarget{class_shader_a3e24fcad187493dfebaa12939072e91d}\label{class_shader_a3e24fcad187493dfebaa12939072e91d} 
+\index{Shader@{Shader}!setMat3@{setMat3}}
+\index{setMat3@{setMat3}!Shader@{Shader}}
+\doxysubsubsection{\texorpdfstring{setMat3()}{setMat3()}}
+{\footnotesize\ttfamily void Shader\+::set\+Mat3 (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name,  }\item[{const glm\+::mat3 \&}]{mat }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{shader_8h_source_l00127}{127}} of file \mbox{\hyperlink{shader_8h_source}{shader.\+h}}.
+
+\Hypertarget{class_shader_a8e711c96f3e1722cbfb88fde9478977c}\label{class_shader_a8e711c96f3e1722cbfb88fde9478977c} 
+\index{Shader@{Shader}!setMat4@{setMat4}}
+\index{setMat4@{setMat4}!Shader@{Shader}}
+\doxysubsubsection{\texorpdfstring{setMat4()}{setMat4()}}
+{\footnotesize\ttfamily void Shader\+::set\+Mat4 (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name,  }\item[{const glm\+::mat4 \&}]{mat }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{shader_8h_source_l00131}{131}} of file \mbox{\hyperlink{shader_8h_source}{shader.\+h}}.
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=241pt]{class_shader_a8e711c96f3e1722cbfb88fde9478977c_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_shader_afd4d41322a1cdd1d5155bf124d19debf}\label{class_shader_afd4d41322a1cdd1d5155bf124d19debf} 
+\index{Shader@{Shader}!setVec2@{setVec2}}
+\index{setVec2@{setVec2}!Shader@{Shader}}
+\doxysubsubsection{\texorpdfstring{setVec2()}{setVec2()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Shader\+::set\+Vec2 (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name,  }\item[{const glm\+::vec2 \&}]{value }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{shader_8h_source_l00099}{99}} of file \mbox{\hyperlink{shader_8h_source}{shader.\+h}}.
+
+\Hypertarget{class_shader_afb91bc9e954bf590857c96ab1331b0ec}\label{class_shader_afb91bc9e954bf590857c96ab1331b0ec} 
+\index{Shader@{Shader}!setVec2@{setVec2}}
+\index{setVec2@{setVec2}!Shader@{Shader}}
+\doxysubsubsection{\texorpdfstring{setVec2()}{setVec2()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Shader\+::set\+Vec2 (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name,  }\item[{float}]{x,  }\item[{float}]{y }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{shader_8h_source_l00103}{103}} of file \mbox{\hyperlink{shader_8h_source}{shader.\+h}}.
+
+\Hypertarget{class_shader_aeb021061c5d451329d92257b07dbfec3}\label{class_shader_aeb021061c5d451329d92257b07dbfec3} 
+\index{Shader@{Shader}!setVec3@{setVec3}}
+\index{setVec3@{setVec3}!Shader@{Shader}}
+\doxysubsubsection{\texorpdfstring{setVec3()}{setVec3()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Shader\+::set\+Vec3 (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name,  }\item[{const glm\+::vec3 \&}]{value }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{shader_8h_source_l00107}{107}} of file \mbox{\hyperlink{shader_8h_source}{shader.\+h}}.
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=242pt]{class_shader_aeb021061c5d451329d92257b07dbfec3_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{class_shader_a90092c25b7dc23964c465b93887300f9}\label{class_shader_a90092c25b7dc23964c465b93887300f9} 
+\index{Shader@{Shader}!setVec3@{setVec3}}
+\index{setVec3@{setVec3}!Shader@{Shader}}
+\doxysubsubsection{\texorpdfstring{setVec3()}{setVec3()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Shader\+::set\+Vec3 (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name,  }\item[{float}]{x,  }\item[{float}]{y,  }\item[{float}]{z }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{shader_8h_source_l00111}{111}} of file \mbox{\hyperlink{shader_8h_source}{shader.\+h}}.
+
+\Hypertarget{class_shader_a79cbe674f6bf1a576a48045dcb924de5}\label{class_shader_a79cbe674f6bf1a576a48045dcb924de5} 
+\index{Shader@{Shader}!setVec4@{setVec4}}
+\index{setVec4@{setVec4}!Shader@{Shader}}
+\doxysubsubsection{\texorpdfstring{setVec4()}{setVec4()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Shader\+::set\+Vec4 (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name,  }\item[{const glm\+::vec4 \&}]{value }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{shader_8h_source_l00115}{115}} of file \mbox{\hyperlink{shader_8h_source}{shader.\+h}}.
+
+\Hypertarget{class_shader_ad7906b3a47e6f2d62ec79f4c871aadb1}\label{class_shader_ad7906b3a47e6f2d62ec79f4c871aadb1} 
+\index{Shader@{Shader}!setVec4@{setVec4}}
+\index{setVec4@{setVec4}!Shader@{Shader}}
+\doxysubsubsection{\texorpdfstring{setVec4()}{setVec4()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Shader\+::set\+Vec4 (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name,  }\item[{float}]{x,  }\item[{float}]{y,  }\item[{float}]{z,  }\item[{float}]{w }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{shader_8h_source_l00119}{119}} of file \mbox{\hyperlink{shader_8h_source}{shader.\+h}}.
+
+\Hypertarget{class_shader_a3c7896754f0e1fca8bde860cfef63832}\label{class_shader_a3c7896754f0e1fca8bde860cfef63832} 
+\index{Shader@{Shader}!use@{use}}
+\index{use@{use}!Shader@{Shader}}
+\doxysubsubsection{\texorpdfstring{use()}{use()}}
+{\footnotesize\ttfamily void Shader\+::use (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line \mbox{\hyperlink{shader_8h_source_l00078}{78}} of file \mbox{\hyperlink{shader_8h_source}{shader.\+h}}.
+
+Here is the caller graph for this function\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=222pt]{class_shader_a3c7896754f0e1fca8bde860cfef63832_icgraph}
+\end{center}
+\end{figure}
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_shader_a142a08b6fbdfc982d82ca10ee0b0f38d}\label{class_shader_a142a08b6fbdfc982d82ca10ee0b0f38d} 
+\index{Shader@{Shader}!ID@{ID}}
+\index{ID@{ID}!Shader@{Shader}}
+\doxysubsubsection{\texorpdfstring{ID}{ID}}
+{\footnotesize\ttfamily unsigned int Shader\+::\+ID}
+
+
+
+Definition at line \mbox{\hyperlink{shader_8h_source_l00015}{15}} of file \mbox{\hyperlink{shader_8h_source}{shader.\+h}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{shader_8h}{shader.\+h}}\end{DoxyCompactItemize}
