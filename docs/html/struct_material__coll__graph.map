@@ -1,7 +1,0 @@
-<map id="Material" name="Material">
-<area shape="rect" id="Node000001" title=" " alt="" coords="41,164,99,229"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,47,71"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="24,71,24,104,31,139,35,149,30,151,25,140,19,105,19,70"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="97,5,134,71"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="109,71,86,148,81,147,104,70"/>
-</map>

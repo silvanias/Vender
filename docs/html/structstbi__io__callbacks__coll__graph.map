@@ -1,9 +1,0 @@
-<map id="stbi_io_callbacks" name="stbi_io_callbacks">
-<area shape="rect" id="Node000001" title=" " alt="" coords="160,148,273,214"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,135,85"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="114,83,171,135,168,139,111,87"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="159,5,274,85"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="219,85,219,131,214,131,214,85"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="299,13,404,78"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="322,80,262,139,258,135,318,76"/>
-</map>

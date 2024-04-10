@@ -1,7 +1,0 @@
-<map id="CubeTex" name="CubeTex">
-<area shape="rect" id="Node000001" title=" " alt="" coords="91,183,251,278"/>
-<area shape="rect" id="Node000002" href="$class_i_cube.html" title=" " alt="" coords="5,5,171,120"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="125,132,150,182,145,184,120,134"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="195,30,315,95"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="241,96,204,169,199,167,236,94"/>
-</map>

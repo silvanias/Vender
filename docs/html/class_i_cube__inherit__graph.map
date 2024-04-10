@@ -1,7 +1,0 @@
-<map id="ICube" name="ICube">
-<area shape="rect" id="Node000001" title=" " alt="" coords="95,5,260,120"/>
-<area shape="rect" id="Node000002" href="$class_cube_default.html" title=" " alt="" coords="5,168,165,277"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="139,134,119,170,114,167,135,132"/>
-<area shape="rect" id="Node000003" href="$class_cube_tex.html" title=" " alt="" coords="189,168,349,277"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="220,132,241,167,236,170,215,134"/>
-</map>
