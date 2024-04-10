@@ -74,16 +74,16 @@ int main()
   Shader cubeTexShader("../shaders/cube_textured.vs", "../shaders/cube_textured.fs");
   Shader lightShader("../shaders/cube_generic.vs", "../shaders/light.fs");
 
-  CubeDefault cube;
+  CubeNorm cubeNorm;
   CubeTex cubeTex;
   CubeDefault lightCube;
-  auto [VBO, cubeVAO] = cube.setupBuffers();
-  auto [VBOT, cubeTexVAO] = cubeTex.setupBuffers();
-  auto [VBOL, lightVAO] = lightCube.setupBuffers();
+  auto [VBOCubeNorm, VAOCubeNorm] = cubeNorm.setupBuffers();
+  auto [VBOCubeTex, VAOCubeTex] = cubeTex.setupBuffers();
+  auto [VBOLight, VAOLight] = lightCube.setupBuffers();
 
   auto clear_color = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);
 
-  // Refactor this
+  // TODO: Refactor this
   // ---------------------------------------------
 
   struct Light
@@ -147,10 +147,10 @@ int main()
     lightShader.setMat4("model", model);
 
     // Draw the light cube
-    glBindVertexArray(lightVAO);
+    glBindVertexArray(VAOLight);
     glDrawArrays(GL_TRIANGLES, 0, 36);
 
-    // GENERIC cube rendering
+    // Normal cube rendering
     // ---------------------------------------------
     if (selectedMaterial < 2)
     {
@@ -173,11 +173,11 @@ int main()
       cubeShader.setMat4("model", model);
 
       // Draw the cube
-      glBindVertexArray(cubeVAO);
+      glBindVertexArray(VAOCubeNorm);
       glDrawArrays(GL_TRIANGLES, 0, 36);
     }
 
-    // TEXTURED cube rendering
+    // Textured cube rendering
     // ---------------------------------------------
     if (selectedMaterial == 2)
     {
@@ -206,7 +206,7 @@ int main()
       glBindTexture(GL_TEXTURE_2D, specularMap);
 
       // Draw the cubeTex
-      glBindVertexArray(cubeTexVAO);
+      glBindVertexArray(VAOCubeTex);
       glDrawArrays(GL_TRIANGLES, 0, 36);
     }
 
@@ -253,10 +253,12 @@ int main()
     glfwPollEvents();
   }
 
-  glDeleteVertexArrays(1, &cubeVAO);
-  glDeleteVertexArrays(1, &lightVAO);
-  glDeleteBuffers(1, &VBO);
-  glDeleteBuffers(1, &VBOL);
+  glDeleteVertexArrays(1, &VAOCubeNorm);
+  glDeleteVertexArrays(1, &VAOCubeTex);
+  glDeleteVertexArrays(1, &VAOLight);
+  glDeleteBuffers(1, &VBOCubeNorm);
+  glDeleteBuffers(1, &VBOCubeTex);
+  glDeleteBuffers(1, &VBOLight);
 
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
