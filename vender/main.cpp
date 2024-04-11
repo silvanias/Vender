@@ -15,11 +15,11 @@
 
 #include "stb_image.h"
 #include "shader.h"
-#include "camera.h"
+#include "camera/camera.h"
 #include "material.h"
 #include "models/objects/cube.h"
 #include "models/objects/pyramid.h"
-#include "models/lights/light.h"
+#include "models/lighting/light.h"
 
 GLFWwindow *createWindow();
 void setupGLFWCallbacks(GLFWwindow *window);
@@ -73,9 +73,9 @@ int main()
 
   glEnable(GL_DEPTH_TEST);
 
-  Shader cubeShader("../shaders/cube_generic.vs", "../shaders/cube_generic.fs");
-  Shader cubeTexShader("../shaders/cube_textured.vs", "../shaders/cube_textured.fs");
-  Shader lightShader("../shaders/cube_generic.vs", "../shaders/light.fs");
+  Shader cubeShader("../vender/shaders/cube_generic.vs", "../vender/shaders/cube_generic.fs");
+  Shader cubeTexShader("../vender/shaders/cube_textured.vs", "../vender/shaders/cube_textured.fs");
+  Shader lightShader("../vender/shaders/cube_generic.vs", "../vender/shaders/light.fs");
 
   CubeNorm cubeNorm;
   CubeTex cubeTex;
@@ -87,8 +87,8 @@ int main()
   auto [VBOLight, VAOLight] = lightCube.setupBuffers();
 
   Material material = mat_generic;
-  unsigned int diffuseMap = loadTexture("../textures/container.png");
-  unsigned int specularMap = loadTexture("../textures/container_specular.png");
+  unsigned int diffuseMap = loadTexture("../vender/textures/container.png");
+  unsigned int specularMap = loadTexture("../vender/textures/container_specular.png");
 
   // Shader configuration
   // --------------------
