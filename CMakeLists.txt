@@ -17,6 +17,7 @@ set(APP_SOURCES
     vender/stb_image.h
     vender/stb_load.cpp
     vender/camera/camera.h
+    vender/camera/camera.cpp
     vender/material.h
     vender/models/objects/cube.h
     vender/models/objects/pyramid.h
