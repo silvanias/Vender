@@ -1,3 +1,6 @@
+#ifndef CUBE_H
+#define CUBE_H
+
 #include <array>
 #include <tuple>
 
@@ -258,3 +261,5 @@ public:
         return {VBO, VAO};
     }
 };
+
+#endif

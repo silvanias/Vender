@@ -17,8 +17,9 @@
 #include "shader.h"
 #include "camera.h"
 #include "material.h"
-#include "models/cube_model.h"
-#include "models/pyramid_model.h"
+#include "models/objects/cube.h"
+#include "models/objects/pyramid.h"
+#include "models/lights/light.h"
 
 GLFWwindow *createWindow();
 void setupGLFWCallbacks(GLFWwindow *window);
@@ -86,26 +87,14 @@ int main()
   auto [VBOLight, VAOLight] = lightCube.setupBuffers();
 
   Material material = mat_generic;
-  unsigned int diffuseMap = loadTexture("../resources/container.png");
-  unsigned int specularMap = loadTexture("../resources/container_specular.png");
+  unsigned int diffuseMap = loadTexture("../textures/container.png");
+  unsigned int specularMap = loadTexture("../textures/container_specular.png");
 
   // Shader configuration
   // --------------------
   cubeTexShader.use();
   cubeTexShader.setInt("material.diffuse", 0);
   cubeTexShader.setInt("material.specular", 1);
-
-  // TODO: Refactor this
-  // ---------------------------------------------
-
-  struct Light
-  {
-    glm::vec3 pos;
-    glm::vec3 color;
-    float ambient;
-    float diffuse;
-    float specular;
-  };
 
   Light light;
 

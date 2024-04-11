@@ -1,3 +1,6 @@
+#ifndef PYRAMID_H
+#define PYRAMID_H
+
 #include <array>
 #include <tuple>
 
@@ -125,3 +128,5 @@ public:
         return {VBO, VAO};
     };
 };
+
+#endif
