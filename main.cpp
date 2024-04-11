@@ -86,8 +86,8 @@ int main()
   auto [VBOLight, VAOLight] = lightCube.setupBuffers();
 
   Material material = mat_generic;
-  unsigned int diffuseMap = loadTexture("../resources/container2.png");
-  unsigned int specularMap = loadTexture("../resources/container2_specular.png");
+  unsigned int diffuseMap = loadTexture("../resources/container.png");
+  unsigned int specularMap = loadTexture("../resources/container_specular.png");
 
   // Shader configuration
   // --------------------
@@ -118,6 +118,7 @@ int main()
   // ImGui configuration
   // --------------------
   int selectedMaterial = 0;
+  int selectedShape = 0;
 
   // Render loop
   // --------------------
@@ -154,7 +155,7 @@ int main()
 
     // Normal cube rendering
     // ---------------------------------------------
-    if (selectedMaterial < 2)
+    if (selectedMaterial < 2 || selectedShape == 1)
     {
       cubeShader.use();
       cubeShader.setVec3("viewPos", camera.cameraPos);
@@ -174,21 +175,24 @@ int main()
       model = glm::mat4(1.0f);
       cubeShader.setMat4("model", model);
 
-      // Draw the cube
-      glBindVertexArray(VAOCubeNorm);
-      glDrawArrays(GL_TRIANGLES, 0, 36);
-
       // TODO: Fix this whole ordeal
-      // Temporary Pyramid Rendering
-      model = glm::translate(model, glm::vec3(-1.0f, 0.0f, 0.0f));
-      cubeShader.setMat4("model", model);
-      glBindVertexArray(VAOPyramidNorm);
-      glDrawArrays(GL_TRIANGLES, 0, 18);
+      if (selectedShape < 1)
+      {
+        // Draw the cube
+        glBindVertexArray(VAOCubeNorm);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+      }
+      else
+      {
+        // Temporary Pyramid Rendering
+        glBindVertexArray(VAOPyramidNorm);
+        glDrawArrays(GL_TRIANGLES, 0, 18);
+      }
     }
 
     // Textured cube rendering
     // ---------------------------------------------
-    if (selectedMaterial == 2)
+    else if (selectedMaterial == 2 && selectedShape == 0)
     {
       cubeTexShader.use();
       cubeTexShader.setVec3("viewPos", camera.cameraPos);
@@ -234,18 +238,24 @@ int main()
 
     if (ImGui::CollapsingHeader("Object"))
     {
-      if (ImGui::RadioButton("Generic", &selectedMaterial, 0))
+      ImGui::RadioButton("Cube", &selectedShape, 0);
+      if (selectedShape == 0)
       {
-        material = mat_generic;
+        ImGui::Indent();
+        if (ImGui::RadioButton("Generic", &selectedMaterial, 0))
+        {
+          material = mat_generic;
+        }
+        else if (ImGui::RadioButton("Gold", &selectedMaterial, 1))
+        {
+          material = mat_gold;
+        }
+        ImGui::RadioButton("Container", &selectedMaterial, 2);
+        ImGui::Unindent();
       }
-      else if (ImGui::RadioButton("Gold", &selectedMaterial, 1))
-      {
-        material = mat_gold;
-      }
-      else if (ImGui::RadioButton("Container", &selectedMaterial, 2))
-      {
-        // blah
-      }
+
+      ImGui::RadioButton("Pyramid", &selectedShape, 1);
+      // TODO: Seperate material and shape code
 
       ImGui::ColorPicker3("Ambient", glm::value_ptr(material.ambient));
       ImGui::ColorPicker3("Diffuse", glm::value_ptr(material.diffuse));
