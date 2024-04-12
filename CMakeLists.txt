@@ -14,6 +14,7 @@ find_package(glad CONFIG REQUIRED)
 set(APP_SOURCES
     vender/main.cpp
     vender/shader.h
+    vender/shader.cpp
     vender/stb_image.h
     vender/stb_load.cpp
     vender/camera/camera.h

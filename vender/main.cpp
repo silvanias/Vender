@@ -289,13 +289,13 @@ void processInput(GLFWwindow *window)
     glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 
   if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-    camera.processKeyboard(UP, deltaTime);
+    camera.processKeyboard(Direction::UP, deltaTime);
   if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-    camera.processKeyboard(DOWN, deltaTime);
+    camera.processKeyboard(Direction::DOWN, deltaTime);
   if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-    camera.processKeyboard(LEFT, deltaTime);
+    camera.processKeyboard(Direction::LEFT, deltaTime);
   if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-    camera.processKeyboard(RIGHT, deltaTime);
+    camera.processKeyboard(Direction::RIGHT, deltaTime);
 }
 
 void key_callback(GLFWwindow *window, int key, int, int action, int)
