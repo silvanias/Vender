@@ -10,29 +10,26 @@ find_package(OpenGL REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/vender)
 
 set(APP_SOURCES
-    vender/main.cpp
-    vender/shader.h
-    vender/shader.cpp
-    vender/stb_image.h
-    vender/stb_load.cpp
-    vender/camera/camera.h
-    vender/camera/camera.cpp
-    vender/material.h
-    vender/models/objects/cube.h
-    vender/models/objects/pyramid.h
-    vender/models/lighting/light.h
+    main.cpp
+    shader.cpp
+    stb_load.cpp
+    camera/camera.cpp
 )
+list(TRANSFORM APP_SOURCES PREPEND vender/)
 
 set(IMGUI_SOURCES
-    vender/imgui/imgui_demo.cpp
-    vender/imgui/imgui_draw.cpp
-    vender/imgui/imgui_tables.cpp
-    vender/imgui/imgui_widgets.cpp
-    vender/imgui/imgui.cpp
-    vender/imgui/backends/imgui_impl_opengl3.cpp
-    vender/imgui/backends/imgui_impl_glfw.cpp)
+    imgui/imgui_demo.cpp
+    imgui/imgui_draw.cpp
+    imgui/imgui_tables.cpp
+    imgui/imgui_widgets.cpp
+    imgui/imgui.cpp
+    imgui/backends/imgui_impl_opengl3.cpp
+    imgui/backends/imgui_impl_glfw.cpp
+)
+list(TRANSFORM IMGUI_SOURCES PREPEND vender/)
 
 add_executable(vender ${APP_SOURCES} ${IMGUI_SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE
