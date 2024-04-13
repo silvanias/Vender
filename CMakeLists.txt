@@ -15,7 +15,8 @@ set(APP_SOURCES
     main.cpp
     shader.cpp
     camera/camera.cpp
-    gui/gui.cpp
+    gui/imgui/imgui_lifecycle.cpp
+    gui/window/window.cpp
 )
 list(TRANSFORM APP_SOURCES PREPEND vender/)
 

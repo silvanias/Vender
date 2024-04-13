@@ -13,7 +13,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "stb/stb_image.h"
 
-#include "gui/gui.h"
+#include "gui/window/window.h"
+#include "gui/imgui/imgui_lifecycle.h"
 #include "shader.h"
 #include "camera/camera.h"
 #include "material.h"
@@ -21,25 +22,20 @@
 #include "models/objects/pyramid.h"
 #include "models/lighting/light.h"
 
-GLFWwindow *createWindow();
 void setupGLFWCallbacks(GLFWwindow *window);
-void framebuffer_size_callback(GLFWwindow *window, int width, int height);
+
 void processInput(GLFWwindow *window);
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 unsigned int loadTexture(const char *path);
 
-GLint SCR_WIDTH = 800;
-GLint SCR_HEIGHT = 600;
-
 Camera camera;
-
-float lastX = SCR_WIDTH / 2;
-float lastY = SCR_HEIGHT / 2;
 
 float deltaTime = 0.0f; // Time between current frame and last frame
 float lastFrame = 0.0f;
+float lastX;
+float lastY;
 
 bool firstMouse = true;
 
@@ -48,6 +44,13 @@ bool DEBUG_MODE = false;
 int main()
 {
   GLFWwindow *window = createWindow();
+  int framebufferWidth;
+  int framebufferHeight;
+  glfwGetFramebufferSize(window, &framebufferWidth, &framebufferHeight);
+
+  lastX = (float)framebufferWidth / 2;
+  lastY = (float)framebufferHeight / 2;
+
   if (window == nullptr)
   {
     std::cout << "Failed to create GLFW window" << std::endl;
@@ -117,6 +120,7 @@ int main()
     auto currentFrame = static_cast<float>(glfwGetTime());
     deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
+    glfwGetFramebufferSize(window, &framebufferWidth, &framebufferHeight);
 
     glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -127,7 +131,7 @@ int main()
     lightShader.use();
     lightShader.setVec3("lightColor", light.color);
 
-    glm::mat4 projection = glm::perspective(glm::radians(camera.fov), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(camera.fov), (float)framebufferWidth / (float)framebufferHeight, 0.1f, 100.0f);
     lightShader.setMat4("projection", projection);
 
     glm::mat4 view = camera.calculateView();
@@ -282,8 +286,7 @@ int main()
   glDeleteBuffers(1, &VBOLight);
 
   ImGuiShutdown();
-  glfwDestroyWindow(window);
-  glfwTerminate();
+  glfwShutdown(window);
   return 0;
 }
 
@@ -325,14 +328,6 @@ void key_callback(GLFWwindow *window, int key, int, int action, int)
   }
 }
 
-// glfw: window size changed, callback executes
-void framebuffer_size_callback(GLFWwindow *, int width, int height)
-{
-  glViewport(0, 0, width, height);
-  SCR_HEIGHT = height;
-  SCR_WIDTH = width;
-}
-
 void mouse_callback(GLFWwindow *, double xpos, double ypos)
 {
 
@@ -344,15 +339,15 @@ void mouse_callback(GLFWwindow *, double xpos, double ypos)
 
   if (firstMouse)
   {
-    lastX = xpos;
-    lastY = ypos;
+    lastX = (float)xpos;
+    lastY = (float)ypos;
     firstMouse = false;
   }
 
-  float xoffset = xpos - lastX;
-  float yoffset = lastY - ypos;
-  lastX = xpos;
-  lastY = ypos;
+  float xoffset = (float)xpos - lastX;
+  float yoffset = lastY - (float)ypos;
+  lastX = (float)xpos;
+  lastY = (float)ypos;
 
   camera.processMouse(xoffset, yoffset);
 }
@@ -364,17 +359,6 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
     return;
   }
   camera.processZoom(yoffset);
-}
-
-GLFWwindow *createWindow()
-{
-  glfwInit();
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // safe on mac
-
-  return glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "vender", nullptr, nullptr);
 }
 
 void setupGLFWCallbacks(GLFWwindow *window)
