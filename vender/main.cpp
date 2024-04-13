@@ -3,7 +3,6 @@
 #define GLFW_DLL
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <GLUT/glut.h>
 
 #include "imgui/imgui.h"
 #include "imgui/backends/imgui_impl_opengl3.h"
@@ -73,9 +72,9 @@ int main()
 
   glEnable(GL_DEPTH_TEST);
 
-  Shader cubeShader("../vender/shaders/cube_generic.vs", "../vender/shaders/cube_generic.fs");
-  Shader cubeTexShader("../vender/shaders/cube_textured.vs", "../vender/shaders/cube_textured.fs");
-  Shader lightShader("../vender/shaders/cube_generic.vs", "../vender/shaders/light.fs");
+  Shader cubeShader("../vender/shaders/vertex/obj_generic.vs", "../vender/shaders/fragment/obj_generic.fs");
+  Shader cubeTexShader("../vender/shaders/vertex/obj_textured.vs", "../vender/shaders/fragment/obj_textured.fs");
+  Shader lightShader("../vender/shaders/vertex/obj_generic.vs", "../vender/shaders/fragment/point_light.fs");
 
   CubeNorm cubeNorm;
   CubeTex cubeTex;
