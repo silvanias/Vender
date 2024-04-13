@@ -15,6 +15,7 @@ set(APP_SOURCES
     main.cpp
     shader.cpp
     camera/camera.cpp
+    input/input.cpp
     gui/imgui/imgui_lifecycle.cpp
     gui/window/window.cpp
 )

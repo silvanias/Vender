@@ -13,6 +13,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "stb/stb_image.h"
 
+#include "appdata.h"
+#include "input/input.h"
 #include "gui/window/window.h"
 #include "gui/imgui/imgui_lifecycle.h"
 #include "shader.h"
@@ -23,33 +25,15 @@
 #include "models/lighting/light.h"
 
 void setupGLFWCallbacks(GLFWwindow *window);
-
-void processInput(GLFWwindow *window);
-void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
-void mouse_callback(GLFWwindow *window, double xpos, double ypos);
-void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 unsigned int loadTexture(const char *path);
-
-Camera camera;
-
-float deltaTime = 0.0f; // Time between current frame and last frame
-float lastFrame = 0.0f;
-float lastX;
-float lastY;
-
-bool firstMouse = true;
-
-bool DEBUG_MODE = false;
 
 int main()
 {
   GLFWwindow *window = createWindow();
+
   int framebufferWidth;
   int framebufferHeight;
   glfwGetFramebufferSize(window, &framebufferWidth, &framebufferHeight);
-
-  lastX = (float)framebufferWidth / 2;
-  lastY = (float)framebufferHeight / 2;
 
   if (window == nullptr)
   {
@@ -71,6 +55,13 @@ int main()
   }
 
   initImGui(window);
+
+  AppData appData{ImGui::GetIO()};
+  glfwSetWindowUserPointer(window, &appData);
+
+  appData.lastX = (float)framebufferWidth / 2;
+  appData.lastY = (float)framebufferHeight / 2;
+
   auto clear_color = ImVec4(0.6f, 0.6f, 0.6f, 1.0f);
 
   glEnable(GL_DEPTH_TEST);
@@ -118,8 +109,8 @@ int main()
   while (!glfwWindowShouldClose(window))
   {
     auto currentFrame = static_cast<float>(glfwGetTime());
-    deltaTime = currentFrame - lastFrame;
-    lastFrame = currentFrame;
+    appData.deltaTime = currentFrame - appData.lastFrame;
+    appData.lastFrame = currentFrame;
     glfwGetFramebufferSize(window, &framebufferWidth, &framebufferHeight);
 
     glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
@@ -131,10 +122,10 @@ int main()
     lightShader.use();
     lightShader.setVec3("lightColor", light.color);
 
-    glm::mat4 projection = glm::perspective(glm::radians(camera.fov), (float)framebufferWidth / (float)framebufferHeight, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(appData.camera.fov), (float)framebufferWidth / (float)framebufferHeight, 0.1f, 100.0f);
     lightShader.setMat4("projection", projection);
 
-    glm::mat4 view = camera.calculateView();
+    glm::mat4 view = appData.camera.calculateView();
     lightShader.setMat4("view", view);
 
     auto model = glm::mat4(1.0f);
@@ -152,7 +143,7 @@ int main()
     if (selectedMaterial < 2)
     {
       genericShader.use();
-      genericShader.setVec3("viewPos", camera.cameraPos);
+      genericShader.setVec3("viewPos", appData.camera.cameraPos);
 
       genericShader.setVec3("light.pos", light.pos);
       genericShader.setVec3("light.ambient", light.ambient * light.color);
@@ -189,7 +180,7 @@ int main()
     else if (selectedMaterial == 2)
     {
       texShader.use();
-      texShader.setVec3("viewPos", camera.cameraPos);
+      texShader.setVec3("viewPos", appData.camera.cameraPos);
 
       texShader.setVec3("light.pos", light.pos);
       texShader.setVec3("light.ambient", light.ambient * light.color);
@@ -231,7 +222,7 @@ int main()
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
     ImGui::Begin("Controls");
-    ImGui::Text("FPS = %f", ImGui::GetIO().Framerate);
+    ImGui::Text("FPS = %f", appData.io.Framerate);
     if (ImGui::CollapsingHeader("Light"))
     {
       ImGui::SliderFloat3("Pos", glm::value_ptr(light.pos), -2.0f, 2.0f);
@@ -290,83 +281,12 @@ int main()
   return 0;
 }
 
-void processInput(GLFWwindow *window)
-{
-  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-    glfwSetWindowShouldClose(window, true);
-  if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-  if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-  if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
-    glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
-
-  if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-    camera.processKeyboard(Direction::UP, deltaTime);
-  if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-    camera.processKeyboard(Direction::DOWN, deltaTime);
-  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-    camera.processKeyboard(Direction::LEFT, deltaTime);
-  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-    camera.processKeyboard(Direction::RIGHT, deltaTime);
-}
-
-void key_callback(GLFWwindow *window, int key, int, int action, int)
-{
-  if (key == GLFW_KEY_M && action == GLFW_PRESS)
-  {
-    if (DEBUG_MODE)
-    {
-      DEBUG_MODE = false;
-      glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    }
-    else
-    {
-      DEBUG_MODE = true;
-      glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-    }
-  }
-}
-
-void mouse_callback(GLFWwindow *, double xpos, double ypos)
-{
-
-  if (const ImGuiIO &io = ImGui::GetIO(); io.WantCaptureMouse || DEBUG_MODE)
-  {
-    firstMouse = true;
-    return;
-  }
-
-  if (firstMouse)
-  {
-    lastX = (float)xpos;
-    lastY = (float)ypos;
-    firstMouse = false;
-  }
-
-  float xoffset = (float)xpos - lastX;
-  float yoffset = lastY - (float)ypos;
-  lastX = (float)xpos;
-  lastY = (float)ypos;
-
-  camera.processMouse(xoffset, yoffset);
-}
-
-void scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
-{
-  if (const ImGuiIO &io = ImGui::GetIO(); io.WantCaptureMouse || DEBUG_MODE)
-  {
-    return;
-  }
-  camera.processZoom(yoffset);
-}
-
 void setupGLFWCallbacks(GLFWwindow *window)
 {
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-  glfwSetCursorPosCallback(window, mouse_callback);
-  glfwSetScrollCallback(window, scroll_callback);
-  glfwSetKeyCallback(window, key_callback);
+  glfwSetCursorPosCallback(window, mouseCallback);
+  glfwSetScrollCallback(window, scrollCallback);
+  glfwSetKeyCallback(window, keyCallback);
 }
 
 // utility function for loading a 2D texture from file
