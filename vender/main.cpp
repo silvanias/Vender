@@ -72,8 +72,8 @@ int main()
 
   glEnable(GL_DEPTH_TEST);
 
-  Shader cubeShader("../vender/shaders/vertex/obj_generic.vs", "../vender/shaders/fragment/obj_generic.fs");
-  Shader cubeTexShader("../vender/shaders/vertex/obj_textured.vs", "../vender/shaders/fragment/obj_textured.fs");
+  Shader genericShader("../vender/shaders/vertex/obj_generic.vs", "../vender/shaders/fragment/obj_generic.fs");
+  Shader texShader("../vender/shaders/vertex/obj_textured.vs", "../vender/shaders/fragment/obj_textured.fs");
   Shader lightShader("../vender/shaders/vertex/obj_generic.vs", "../vender/shaders/fragment/point_light.fs");
 
   CubeNorm cubeNorm;
@@ -84,7 +84,6 @@ int main()
   auto [VBOCubeNorm, VAOCubeNorm] = cubeNorm.setupBuffers();
   auto [VBOCubeTex, VAOCubeTex] = cubeTex.setupBuffers();
   auto [VBOPyramidNorm, VAOPyramidNorm] = pyramidNorm.setupBuffers();
-
   auto [VBOPyramidTex, VAOPyramidTex] = pyramidTex.setupBuffers();
   auto [VBOLight, VAOLight] = lightCube.setupBuffers();
 
@@ -94,9 +93,9 @@ int main()
 
   // Shader configuration
   // --------------------
-  cubeTexShader.use();
-  cubeTexShader.setInt("material.diffuse", 0);
-  cubeTexShader.setInt("material.specular", 1);
+  texShader.use();
+  texShader.setInt("material.diffuse", 0);
+  texShader.setInt("material.specular", 1);
 
   Light light;
 
@@ -148,23 +147,23 @@ int main()
     // ---------------------------------------------
     if (selectedMaterial < 2)
     {
-      cubeShader.use();
-      cubeShader.setVec3("viewPos", camera.cameraPos);
+      genericShader.use();
+      genericShader.setVec3("viewPos", camera.cameraPos);
 
-      cubeShader.setVec3("light.pos", light.pos);
-      cubeShader.setVec3("light.ambient", light.ambient * light.color);
-      cubeShader.setVec3("light.diffuse", light.diffuse * light.color);
-      cubeShader.setVec3("light.specular", light.specular * light.color);
+      genericShader.setVec3("light.pos", light.pos);
+      genericShader.setVec3("light.ambient", light.ambient * light.color);
+      genericShader.setVec3("light.diffuse", light.diffuse * light.color);
+      genericShader.setVec3("light.specular", light.specular * light.color);
 
-      cubeShader.setVec3("material.ambient", material.ambient);
-      cubeShader.setVec3("material.diffuse", material.diffuse);
-      cubeShader.setVec3("material.specular", material.specular);
-      cubeShader.setFloat("material.shininess", material.shininess);
+      genericShader.setVec3("material.ambient", material.ambient);
+      genericShader.setVec3("material.diffuse", material.diffuse);
+      genericShader.setVec3("material.specular", material.specular);
+      genericShader.setFloat("material.shininess", material.shininess);
 
-      cubeShader.setMat4("projection", projection);
-      cubeShader.setMat4("view", view);
+      genericShader.setMat4("projection", projection);
+      genericShader.setMat4("view", view);
       model = glm::mat4(1.0f);
-      cubeShader.setMat4("model", model);
+      genericShader.setMat4("model", model);
 
       // TODO: Fix this whole ordeal
       if (selectedShape < 1)
@@ -185,21 +184,21 @@ int main()
     // ---------------------------------------------
     else if (selectedMaterial == 2)
     {
-      cubeTexShader.use();
-      cubeTexShader.setVec3("viewPos", camera.cameraPos);
+      texShader.use();
+      texShader.setVec3("viewPos", camera.cameraPos);
 
-      cubeTexShader.setVec3("light.pos", light.pos);
-      cubeTexShader.setVec3("light.ambient", light.ambient * light.color);
-      cubeTexShader.setVec3("light.diffuse", light.diffuse * light.color);
-      cubeTexShader.setVec3("light.specular", light.specular * light.color);
+      texShader.setVec3("light.pos", light.pos);
+      texShader.setVec3("light.ambient", light.ambient * light.color);
+      texShader.setVec3("light.diffuse", light.diffuse * light.color);
+      texShader.setVec3("light.specular", light.specular * light.color);
 
-      cubeTexShader.setVec3("material.specular", material.specular);
-      cubeTexShader.setFloat("material.shininess", material.shininess);
+      texShader.setVec3("material.specular", material.specular);
+      texShader.setFloat("material.shininess", material.shininess);
 
-      cubeTexShader.setMat4("projection", projection);
-      cubeTexShader.setMat4("view", view);
+      texShader.setMat4("projection", projection);
+      texShader.setMat4("view", view);
       model = glm::mat4(1.0f);
-      cubeTexShader.setMat4("model", model);
+      texShader.setMat4("model", model);
 
       // Bind diffuse map
       glActiveTexture(GL_TEXTURE0);
@@ -272,14 +271,14 @@ int main()
   }
 
   glDeleteVertexArrays(1, &VAOCubeNorm);
-  glDeleteVertexArrays(1, &VAOCubeTex);
-  glDeleteVertexArrays(1, &VAOPyramidNorm);
-  glDeleteVertexArrays(1, &VAOPyramidTex);
-  glDeleteVertexArrays(1, &VAOLight);
   glDeleteBuffers(1, &VBOCubeNorm);
+  glDeleteVertexArrays(1, &VAOCubeTex);
   glDeleteBuffers(1, &VBOCubeTex);
+  glDeleteVertexArrays(1, &VAOPyramidNorm);
   glDeleteBuffers(1, &VBOPyramidNorm);
+  glDeleteVertexArrays(1, &VAOPyramidTex);
   glDeleteBuffers(1, &VBOPyramidTex);
+  glDeleteVertexArrays(1, &VAOLight);
   glDeleteBuffers(1, &VBOLight);
 
   ImGui_ImplOpenGL3_Shutdown();
