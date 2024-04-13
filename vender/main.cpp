@@ -88,8 +88,8 @@ int main()
   auto [VBOLight, VAOLight] = lightCube.setupBuffers();
 
   Material material = mat_generic;
-  unsigned int diffuseMap = loadTexture("../vender/textures/container.png");
-  unsigned int specularMap = loadTexture("../vender/textures/container_specular.png");
+  unsigned int diffuseMap = loadTexture("../assets/textures/container.png");
+  unsigned int specularMap = loadTexture("../assets/textures/container_specular.png");
 
   // Shader configuration
   // --------------------
