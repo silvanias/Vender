@@ -14,13 +14,12 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/vender)
 
 set(APP_SOURCES
     main.cpp
-    shader.cpp
-    stb_load.cpp
+    shader.cpp   
     camera/camera.cpp
 )
 list(TRANSFORM APP_SOURCES PREPEND vender/)
 
-set(IMGUI_SOURCES
+set(LIB_SOURCES
     imgui/imgui_demo.cpp
     imgui/imgui_draw.cpp
     imgui/imgui_tables.cpp
@@ -28,13 +27,16 @@ set(IMGUI_SOURCES
     imgui/imgui.cpp
     imgui/backends/imgui_impl_opengl3.cpp
     imgui/backends/imgui_impl_glfw.cpp
-)
-list(TRANSFORM IMGUI_SOURCES PREPEND vender/)
 
-add_executable(vender ${APP_SOURCES} ${IMGUI_SOURCES})
+    stb/stb_load.cpp
+)
+list(TRANSFORM LIB_SOURCES PREPEND lib/)
+
+add_executable(vender ${APP_SOURCES} ${LIB_SOURCES})
+
 target_include_directories(${PROJECT_NAME} PRIVATE
-    vender/imgui
-    vender/imgui/backends)
+    lib/imgui
+    ${CMAKE_SOURCE_DIR}/lib)
 
 target_link_libraries(vender PRIVATE ${OPENGL_LIBRARIES})
 target_link_libraries(vender PRIVATE glfw)
