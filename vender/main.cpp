@@ -11,8 +11,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
 #include "stb/stb_image.h"
+
+#include "gui/gui.h"
 #include "shader.h"
 #include "camera/camera.h"
 #include "material.h"
@@ -27,7 +28,6 @@ void processInput(GLFWwindow *window);
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
-void initImGui(GLFWwindow *window);
 unsigned int loadTexture(const char *path);
 
 GLint SCR_WIDTH = 800;
@@ -281,10 +281,7 @@ int main()
   glDeleteVertexArrays(1, &VAOLight);
   glDeleteBuffers(1, &VBOLight);
 
-  ImGui_ImplOpenGL3_Shutdown();
-  ImGui_ImplGlfw_Shutdown();
-  ImGui::DestroyContext();
-
+  ImGuiShutdown();
   glfwDestroyWindow(window);
   glfwTerminate();
   return 0;
@@ -367,25 +364,6 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
     return;
   }
   camera.processZoom(yoffset);
-}
-
-void initImGui(GLFWwindow *window)
-{
-  const char *glsl_version = "#version 150";
-  // Setup Dear ImGui context
-  IMGUI_CHECKVERSION();
-  ImGui::CreateContext();
-  ImGuiIO &io = ImGui::GetIO();
-  (void)io;
-  io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
-  io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;  // Enable Gamepad Controls
-
-  ImGui::StyleColorsDark();
-  ImGui::SetNextWindowCollapsed(true);
-
-  // Setup Platform/Renderer backends
-  ImGui_ImplGlfw_InitForOpenGL(window, true); // Second param install_callback=true will install GLFW callbacks and chain to existing ones.
-  ImGui_ImplOpenGL3_Init(glsl_version);
 }
 
 GLFWwindow *createWindow()

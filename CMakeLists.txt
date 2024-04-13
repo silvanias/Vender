@@ -10,12 +10,12 @@ find_package(OpenGL REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/vender)
 
 set(APP_SOURCES
     main.cpp
-    shader.cpp   
+    shader.cpp
     camera/camera.cpp
+    gui/gui.cpp
 )
 list(TRANSFORM APP_SOURCES PREPEND vender/)
 
