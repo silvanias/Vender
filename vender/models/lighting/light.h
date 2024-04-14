@@ -1,5 +1,4 @@
-#ifndef LIGHT_H
-#define LIGHT_H
+#pragma once
 
 #include <glm/glm.hpp>
 
@@ -11,5 +10,3 @@ struct Light
     float diffuse;
     float specular;
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#pragma once
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -30,5 +29,3 @@ public:
     void processMouse(float xoffset, float yoffset);
     void processZoom(float yoffset);
 };
-
-#endif

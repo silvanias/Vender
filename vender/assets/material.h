@@ -1,5 +1,4 @@
-#ifndef MATERIAL_H
-#define MATERIAL_H
+#pragma once
 
 #include <glm/glm.hpp>
 
@@ -25,5 +24,3 @@ const Material mat_gold = {
     glm::vec3(0.5f, 0.5f, 0.5f),  // specular
     168.0f                        // shininess
 };
-
-#endif

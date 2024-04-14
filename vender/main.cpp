@@ -90,8 +90,6 @@ int main()
   // --------------------
   while (!glfwWindowShouldClose(window))
   {
-    // auto appData = (AppData *)glfwGetWindowUserPointer(window);
-
     auto currentFrame = static_cast<float>(glfwGetTime());
     appData->deltaTime = currentFrame - appData->lastFrame;
     appData->lastFrame = currentFrame;

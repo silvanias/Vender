@@ -1,5 +1,4 @@
-#ifndef APPDATA_H
-#define APPDATA_H
+#pragma once
 
 #include <memory>
 #include <GLFW/glfw3.h>
@@ -36,5 +35,3 @@ struct AppData
 };
 
 std::unique_ptr<AppData> initAppData(GLFWwindow *window);
-
-#endif

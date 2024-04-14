@@ -1,6 +1,3 @@
-#ifndef TEXTURE_H
-#define TEXTURE_H
+#pragma once
 
 unsigned int loadTexture(char const *path);
-
-#endif
