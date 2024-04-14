@@ -31,10 +31,6 @@ int main()
 {
   GLFWwindow *window = createWindow();
 
-  int framebufferWidth;
-  int framebufferHeight;
-  glfwGetFramebufferSize(window, &framebufferWidth, &framebufferHeight);
-
   if (window == nullptr)
   {
     std::cout << "Failed to create GLFW window" << std::endl;
@@ -55,12 +51,17 @@ int main()
   }
 
   initImGui(window);
+  const ImGuiIO &io = ImGui::GetIO();
+  Camera camera;
 
-  AppData appData{ImGui::GetIO()};
+  int framebufferWidth;
+  int framebufferHeight;
+  glfwGetFramebufferSize(window, &framebufferWidth, &framebufferHeight);
+  auto lastX = (float)framebufferWidth / 2;
+  auto lastY = (float)framebufferHeight / 2;
+
+  AppData appData(io, &camera, framebufferWidth, framebufferHeight, lastX, lastY);
   glfwSetWindowUserPointer(window, &appData);
-
-  appData.lastX = (float)framebufferWidth / 2;
-  appData.lastY = (float)framebufferHeight / 2;
 
   auto clear_color = ImVec4(0.6f, 0.6f, 0.6f, 1.0f);
 
@@ -111,7 +112,6 @@ int main()
     auto currentFrame = static_cast<float>(glfwGetTime());
     appData.deltaTime = currentFrame - appData.lastFrame;
     appData.lastFrame = currentFrame;
-    glfwGetFramebufferSize(window, &framebufferWidth, &framebufferHeight);
 
     glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -122,10 +122,10 @@ int main()
     lightShader.use();
     lightShader.setVec3("lightColor", light.color);
 
-    glm::mat4 projection = glm::perspective(glm::radians(appData.camera.fov), (float)framebufferWidth / (float)framebufferHeight, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(appData.camera->fov), (float)appData.framebufferWidth / (float)appData.framebufferHeight, 0.1f, 100.0f);
     lightShader.setMat4("projection", projection);
 
-    glm::mat4 view = appData.camera.calculateView();
+    glm::mat4 view = appData.camera->calculateView();
     lightShader.setMat4("view", view);
 
     auto model = glm::mat4(1.0f);
@@ -143,7 +143,7 @@ int main()
     if (selectedMaterial < 2)
     {
       genericShader.use();
-      genericShader.setVec3("viewPos", appData.camera.cameraPos);
+      genericShader.setVec3("viewPos", appData.camera->cameraPos);
 
       genericShader.setVec3("light.pos", light.pos);
       genericShader.setVec3("light.ambient", light.ambient * light.color);
@@ -180,7 +180,7 @@ int main()
     else if (selectedMaterial == 2)
     {
       texShader.use();
-      texShader.setVec3("viewPos", appData.camera.cameraPos);
+      texShader.setVec3("viewPos", appData.camera->cameraPos);
 
       texShader.setVec3("light.pos", light.pos);
       texShader.setVec3("light.ambient", light.ambient * light.color);

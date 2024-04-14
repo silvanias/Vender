@@ -1,10 +1,10 @@
 #include "input.h"
-#include "../camera/camera.h"
-#include "../appdata.h"
+#include "camera/camera.h"
+#include "appdata.h"
 
 void processInput(GLFWwindow *window)
 {
-    auto appData = (AppData *)(glfwGetWindowUserPointer(window));
+    auto appData = (AppData *)glfwGetWindowUserPointer(window);
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
     if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
@@ -15,18 +15,18 @@ void processInput(GLFWwindow *window)
         glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        appData->camera.processKeyboard(Direction::UP, appData->deltaTime);
+        appData->camera->processKeyboard(Direction::UP, appData->deltaTime);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        appData->camera.processKeyboard(Direction::DOWN, appData->deltaTime);
+        appData->camera->processKeyboard(Direction::DOWN, appData->deltaTime);
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        appData->camera.processKeyboard(Direction::LEFT, appData->deltaTime);
+        appData->camera->processKeyboard(Direction::LEFT, appData->deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        appData->camera.processKeyboard(Direction::RIGHT, appData->deltaTime);
+        appData->camera->processKeyboard(Direction::RIGHT, appData->deltaTime);
 }
 
 void keyCallback(GLFWwindow *window, int key, int, int action, int)
 {
-    auto appData = (AppData *)(glfwGetWindowUserPointer(window));
+    auto appData = (AppData *)glfwGetWindowUserPointer(window);
     if (key == GLFW_KEY_M && action == GLFW_PRESS)
     {
         if (appData->debug_mode)
@@ -44,7 +44,7 @@ void keyCallback(GLFWwindow *window, int key, int, int action, int)
 
 void mouseCallback(GLFWwindow *window, double xpos, double ypos)
 {
-    auto appData = (AppData *)(glfwGetWindowUserPointer(window));
+    auto appData = (AppData *)glfwGetWindowUserPointer(window);
     if (appData->io.WantCaptureMouse || appData->debug_mode)
     {
         appData->firstMouse = true;
@@ -63,15 +63,15 @@ void mouseCallback(GLFWwindow *window, double xpos, double ypos)
     appData->lastX = xpos;
     appData->lastY = ypos;
 
-    appData->camera.processMouse(xoffset, yoffset);
+    appData->camera->processMouse(xoffset, yoffset);
 }
 
 void scrollCallback(GLFWwindow *window, double xoffset, double yoffset)
 {
-    auto appData = (AppData *)(glfwGetWindowUserPointer(window));
+    auto appData = (AppData *)glfwGetWindowUserPointer(window);
     if (appData->io.WantCaptureMouse || appData->debug_mode)
     {
         return;
     }
-    appData->camera.processZoom(yoffset);
+    appData->camera->processZoom(yoffset);
 }

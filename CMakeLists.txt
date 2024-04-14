@@ -38,7 +38,9 @@ add_executable(vender ${APP_SOURCES} ${LIB_SOURCES})
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     lib/imgui
-    ${CMAKE_SOURCE_DIR}/lib)
+    ${CMAKE_SOURCE_DIR}/lib
+    ${CMAKE_SOURCE_DIR}/vender)
+
 
 target_link_libraries(vender PRIVATE ${OPENGL_LIBRARIES})
 target_link_libraries(vender PRIVATE glfw)

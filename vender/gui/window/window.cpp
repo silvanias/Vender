@@ -1,4 +1,5 @@
 #include "window.h"
+#include "appdata.h"
 
 GLFWwindow *createWindow(GLint scr_width, GLint scr_height)
 {
@@ -18,7 +19,10 @@ void glfwShutdown(GLFWwindow *window)
 }
 
 // glfw: window size changed, callback executes
-void framebuffer_size_callback(GLFWwindow *, int width, int height)
+void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
+    auto appData = (AppData *)glfwGetWindowUserPointer(window);
+    appData->framebufferWidth = width;
+    appData->framebufferHeight = height;
     glViewport(0, 0, width, height);
 }
