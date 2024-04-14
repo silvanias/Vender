@@ -3,29 +3,28 @@
 #define GLFW_DLL
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "imgui/imgui.h"
 #include "imgui/backends/imgui_impl_opengl3.h"
 #include "imgui/backends/imgui_impl_glfw.h"
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include "stb/stb_image.h"
 
 #include "appdata.h"
 #include "input/input.h"
 #include "gui/window/window.h"
 #include "gui/imgui/imgui_lifecycle.h"
-#include "shader.h"
 #include "camera/camera.h"
-#include "material.h"
+#include "shaders/shader.h"
+#include "assets/texture.h"
+#include "assets/material.h"
 #include "models/objects/cube.h"
 #include "models/objects/pyramid.h"
 #include "models/lighting/light.h"
 
 void setupGLFWCallbacks(GLFWwindow *window);
-unsigned int loadTexture(const char *path);
 
 int main()
 {
@@ -287,45 +286,4 @@ void setupGLFWCallbacks(GLFWwindow *window)
   glfwSetCursorPosCallback(window, mouseCallback);
   glfwSetScrollCallback(window, scrollCallback);
   glfwSetKeyCallback(window, keyCallback);
-}
-
-// utility function for loading a 2D texture from file
-// ---------------------------------------------------
-unsigned int loadTexture(char const *path)
-{
-  unsigned int textureID;
-  glGenTextures(1, &textureID);
-
-  int width;
-  int height;
-  int nrComponents;
-  unsigned char *data = stbi_load(path, &width, &height, &nrComponents, 0);
-  if (data)
-  {
-    GLenum format;
-    if (nrComponents == 1)
-      format = GL_RED;
-    else if (nrComponents == 3)
-      format = GL_RGB;
-    else if (nrComponents == 4)
-      format = GL_RGBA;
-
-    glBindTexture(GL_TEXTURE_2D, textureID);
-    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    stbi_image_free(data);
-  }
-  else
-  {
-    std::cout << "Texture failed to load at path: " << path << std::endl;
-    stbi_image_free(data);
-  }
-
-  return textureID;
 }
