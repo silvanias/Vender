@@ -1,10 +1,15 @@
+#ifndef APPDATA_H
+#define APPDATA_H
+
+#include <memory>
+#include <GLFW/glfw3.h>
 #include "camera/camera.h"
 #include "imgui.h"
 
 struct AppData
 {
     const ImGuiIO &io;
-    Camera *camera;
+    std::unique_ptr<Camera> camera;
     int framebufferWidth;
     int framebufferHeight;
     float lastX;
@@ -15,13 +20,13 @@ struct AppData
     bool debug_mode = false;
     AppData(
         const ImGuiIO &_io,
-        Camera *_camera,
+        std::unique_ptr<Camera> _camera,
         int _fbw,
         int _fbh,
         float _lastX,
         float _lastY)
         : io(_io),
-          camera(_camera),
+          camera(std::move(_camera)),
           framebufferWidth(_fbw),
           framebufferHeight(_fbh),
           lastX(_lastX),
@@ -29,3 +34,7 @@ struct AppData
     {
     }
 };
+
+std::unique_ptr<AppData> initAppData(GLFWwindow *window);
+
+#endif

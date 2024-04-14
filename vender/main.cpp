@@ -24,47 +24,29 @@
 #include "models/objects/pyramid.h"
 #include "models/lighting/light.h"
 
-void setupGLFWCallbacks(GLFWwindow *window);
-
 int main()
 {
   GLFWwindow *window = createWindow();
-
   if (window == nullptr)
   {
     std::cout << "Failed to create GLFW window" << std::endl;
     glfwTerminate();
     return -1;
   }
-  glfwMakeContextCurrent(window);
-  setupGLFWCallbacks(window);
-  glfwSwapInterval(1);
 
-  // Capture mouse
-  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
-  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+  configWindow(window);
+  if (!initializeGlAD())
   {
-    std::cout << "Failed to initialize GLAD" << std::endl;
     return -1;
   }
+  glEnable(GL_DEPTH_TEST);
 
   initImGui(window);
-  const ImGuiIO &io = ImGui::GetIO();
-  Camera camera;
 
-  int framebufferWidth;
-  int framebufferHeight;
-  glfwGetFramebufferSize(window, &framebufferWidth, &framebufferHeight);
-  auto lastX = (float)framebufferWidth / 2;
-  auto lastY = (float)framebufferHeight / 2;
-
-  AppData appData(io, &camera, framebufferWidth, framebufferHeight, lastX, lastY);
-  glfwSetWindowUserPointer(window, &appData);
+  std::unique_ptr<AppData> appData = initAppData(window);
+  glfwSetWindowUserPointer(window, appData.get());
 
   auto clear_color = ImVec4(0.6f, 0.6f, 0.6f, 1.0f);
-
-  glEnable(GL_DEPTH_TEST);
 
   Shader genericShader("../vender/shaders/vertex/obj_generic.vs", "../vender/shaders/fragment/obj_generic.fs");
   Shader texShader("../vender/shaders/vertex/obj_textured.vs", "../vender/shaders/fragment/obj_textured.fs");
@@ -108,9 +90,11 @@ int main()
   // --------------------
   while (!glfwWindowShouldClose(window))
   {
+    // auto appData = (AppData *)glfwGetWindowUserPointer(window);
+
     auto currentFrame = static_cast<float>(glfwGetTime());
-    appData.deltaTime = currentFrame - appData.lastFrame;
-    appData.lastFrame = currentFrame;
+    appData->deltaTime = currentFrame - appData->lastFrame;
+    appData->lastFrame = currentFrame;
 
     glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -121,10 +105,10 @@ int main()
     lightShader.use();
     lightShader.setVec3("lightColor", light.color);
 
-    glm::mat4 projection = glm::perspective(glm::radians(appData.camera->fov), (float)appData.framebufferWidth / (float)appData.framebufferHeight, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(appData->camera->fov), (float)appData->framebufferWidth / (float)appData->framebufferHeight, 0.1f, 100.0f);
     lightShader.setMat4("projection", projection);
 
-    glm::mat4 view = appData.camera->calculateView();
+    glm::mat4 view = appData->camera->calculateView();
     lightShader.setMat4("view", view);
 
     auto model = glm::mat4(1.0f);
@@ -142,7 +126,7 @@ int main()
     if (selectedMaterial < 2)
     {
       genericShader.use();
-      genericShader.setVec3("viewPos", appData.camera->cameraPos);
+      genericShader.setVec3("viewPos", appData->camera->cameraPos);
 
       genericShader.setVec3("light.pos", light.pos);
       genericShader.setVec3("light.ambient", light.ambient * light.color);
@@ -179,7 +163,7 @@ int main()
     else if (selectedMaterial == 2)
     {
       texShader.use();
-      texShader.setVec3("viewPos", appData.camera->cameraPos);
+      texShader.setVec3("viewPos", appData->camera->cameraPos);
 
       texShader.setVec3("light.pos", light.pos);
       texShader.setVec3("light.ambient", light.ambient * light.color);
@@ -221,7 +205,7 @@ int main()
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
     ImGui::Begin("Controls");
-    ImGui::Text("FPS = %f", appData.io.Framerate);
+    ImGui::Text("FPS = %f", appData->io.Framerate);
     if (ImGui::CollapsingHeader("Light"))
     {
       ImGui::SliderFloat3("Pos", glm::value_ptr(light.pos), -2.0f, 2.0f);
@@ -278,12 +262,4 @@ int main()
   ImGuiShutdown();
   glfwShutdown(window);
   return 0;
-}
-
-void setupGLFWCallbacks(GLFWwindow *window)
-{
-  glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-  glfwSetCursorPosCallback(window, mouseCallback);
-  glfwSetScrollCallback(window, scrollCallback);
-  glfwSetKeyCallback(window, keyCallback);
 }

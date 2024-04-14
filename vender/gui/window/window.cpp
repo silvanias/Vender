@@ -1,5 +1,10 @@
+#include <iostream>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 #include "window.h"
 #include "appdata.h"
+#include "input/input.h"
 
 GLFWwindow *createWindow(GLint scr_width, GLint scr_height)
 {
@@ -12,10 +17,36 @@ GLFWwindow *createWindow(GLint scr_width, GLint scr_height)
     return glfwCreateWindow(scr_width, scr_height, "vender", nullptr, nullptr);
 }
 
+void configWindow(GLFWwindow *window)
+{
+    glfwMakeContextCurrent(window);
+    setupGLFWCallbacks(window);
+    glfwSwapInterval(1);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+}
+
+bool initializeGlAD()
+{
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return false;
+    }
+    return true;
+}
+
 void glfwShutdown(GLFWwindow *window)
 {
     glfwDestroyWindow(window);
     glfwTerminate();
+}
+
+void setupGLFWCallbacks(GLFWwindow *window)
+{
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetCursorPosCallback(window, mouseCallback);
+    glfwSetScrollCallback(window, scrollCallback);
+    glfwSetKeyCallback(window, keyCallback);
 }
 
 // glfw: window size changed, callback executes

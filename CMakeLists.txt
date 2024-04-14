@@ -13,6 +13,7 @@ find_package(glad CONFIG REQUIRED)
 
 set(APP_SOURCES
     main.cpp
+    appdata.cpp
     shaders/shader.cpp
     camera/camera.cpp
     input/input.cpp
