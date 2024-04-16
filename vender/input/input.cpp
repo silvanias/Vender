@@ -4,6 +4,7 @@
 
 void processInput(GLFWwindow *window)
 {
+    Camera &camera = Camera::getInstance();
     auto appData = (AppData *)glfwGetWindowUserPointer(window);
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
@@ -15,13 +16,13 @@ void processInput(GLFWwindow *window)
         glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        appData->camera->processKeyboard(Direction::UP, appData->deltaTime);
+        camera.processKeyboard(Direction::UP, appData->deltaTime);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        appData->camera->processKeyboard(Direction::DOWN, appData->deltaTime);
+        camera.processKeyboard(Direction::DOWN, appData->deltaTime);
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        appData->camera->processKeyboard(Direction::LEFT, appData->deltaTime);
+        camera.processKeyboard(Direction::LEFT, appData->deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        appData->camera->processKeyboard(Direction::RIGHT, appData->deltaTime);
+        camera.processKeyboard(Direction::RIGHT, appData->deltaTime);
 }
 
 void keyCallback(GLFWwindow *window, int key, int, int action, int)
@@ -44,6 +45,7 @@ void keyCallback(GLFWwindow *window, int key, int, int action, int)
 
 void mouseCallback(GLFWwindow *window, double xpos, double ypos)
 {
+    Camera &camera = Camera::getInstance();
     auto appData = (AppData *)glfwGetWindowUserPointer(window);
     if (appData->io.WantCaptureMouse || appData->debug_mode)
     {
@@ -63,15 +65,16 @@ void mouseCallback(GLFWwindow *window, double xpos, double ypos)
     appData->lastX = xpos;
     appData->lastY = ypos;
 
-    appData->camera->processMouse(xoffset, yoffset);
+    camera.processMouse(xoffset, yoffset);
 }
 
 void scrollCallback(GLFWwindow *window, double xoffset, double yoffset)
 {
+    Camera &camera = Camera::getInstance();
     auto appData = (AppData *)glfwGetWindowUserPointer(window);
     if (appData->io.WantCaptureMouse || appData->debug_mode)
     {
         return;
     }
-    appData->camera->processZoom(yoffset);
+    camera.processZoom(yoffset);
 }

@@ -90,6 +90,7 @@ int main()
   // --------------------
   while (!glfwWindowShouldClose(window))
   {
+    const Camera &camera = Camera::getInstance();
     auto currentFrame = static_cast<float>(glfwGetTime());
     appData->deltaTime = currentFrame - appData->lastFrame;
     appData->lastFrame = currentFrame;
@@ -103,10 +104,10 @@ int main()
     lightShader.use();
     lightShader.setVec3("lightColor", light.color);
 
-    glm::mat4 projection = glm::perspective(glm::radians(appData->camera->fov), (float)appData->framebufferWidth / (float)appData->framebufferHeight, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(camera.fov), (float)appData->framebufferWidth / (float)appData->framebufferHeight, 0.1f, 100.0f);
     lightShader.setMat4("projection", projection);
 
-    glm::mat4 view = appData->camera->calculateView();
+    glm::mat4 view = camera.calculateView();
     lightShader.setMat4("view", view);
 
     auto model = glm::mat4(1.0f);
@@ -124,7 +125,7 @@ int main()
     if (selectedMaterial < 2)
     {
       genericShader.use();
-      genericShader.setVec3("viewPos", appData->camera->cameraPos);
+      genericShader.setVec3("viewPos", camera.cameraPos);
 
       genericShader.setVec3("light.pos", light.pos);
       genericShader.setVec3("light.ambient", light.ambient * light.color);
@@ -161,7 +162,7 @@ int main()
     else if (selectedMaterial == 2)
     {
       texShader.use();
-      texShader.setVec3("viewPos", appData->camera->cameraPos);
+      texShader.setVec3("viewPos", camera.cameraPos);
 
       texShader.setVec3("light.pos", light.pos);
       texShader.setVec3("light.ambient", light.ambient * light.color);

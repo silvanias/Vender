@@ -24,8 +24,20 @@ public:
     glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
     glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
+    static Camera &getInstance()
+    {
+        static Camera instance;
+        return instance;
+    }
+
+    Camera(Camera const &) = delete;
+    Camera &operator=(Camera const &) = delete;
+
     glm::mat4 calculateView() const;
     void processKeyboard(Direction direction, float deltaTime);
     void processMouse(float xoffset, float yoffset);
     void processZoom(float yoffset);
+
+private:
+    Camera() = default;
 };
