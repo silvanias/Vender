@@ -3,12 +3,12 @@
 #include <array>
 #include <tuple>
 
-class AbstractPyramid
+#include "shape.h"
+
+class AbstractPyramid : public AbstractShape
 {
 public:
-    virtual std::tuple<unsigned int, unsigned int> setupBuffers() = 0;
-
-    virtual ~AbstractPyramid() = default;
+    ~AbstractPyramid() override = default;
 
 protected:
     const std::array<float, 54> vertPos = {

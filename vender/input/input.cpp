@@ -6,6 +6,7 @@ void processInput(GLFWwindow *window)
 {
     Camera &camera = Camera::getInstance();
     auto appData = (AppData *)glfwGetWindowUserPointer(window);
+
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
     if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
@@ -47,6 +48,7 @@ void mouseCallback(GLFWwindow *window, double xpos, double ypos)
 {
     Camera &camera = Camera::getInstance();
     auto appData = (AppData *)glfwGetWindowUserPointer(window);
+
     if (appData->io.WantCaptureMouse || appData->debug_mode)
     {
         appData->firstMouse = true;
@@ -72,6 +74,7 @@ void scrollCallback(GLFWwindow *window, double xoffset, double yoffset)
 {
     Camera &camera = Camera::getInstance();
     auto appData = (AppData *)glfwGetWindowUserPointer(window);
+
     if (appData->io.WantCaptureMouse || appData->debug_mode)
     {
         return;

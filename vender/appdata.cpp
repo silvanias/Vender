@@ -3,7 +3,6 @@
 std::unique_ptr<AppData> initAppData(GLFWwindow *window)
 {
     const ImGuiIO &io = ImGui::GetIO();
-
     int framebufferWidth;
     int framebufferHeight;
     glfwGetFramebufferSize(window, &framebufferWidth, &framebufferHeight);
