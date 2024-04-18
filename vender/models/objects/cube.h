@@ -139,6 +139,10 @@ protected:
         1.0f, 0.0f,
         0.0f, 0.0f,
         0.0f, 1.0f};
+
+    static constexpr size_t vertPosSize = sizeof(vertPos);
+    static constexpr size_t vertNormSize = sizeof(vertNorm);
+    static constexpr size_t texCoordSize = sizeof(texCoords);
 };
 
 class CubeDefault : public AbstractCube
@@ -146,17 +150,9 @@ class CubeDefault : public AbstractCube
 public:
     std::tuple<unsigned int, unsigned int> setupBuffers() override
     {
-        unsigned int VBO;
-        unsigned int VAO;
-        glGenVertexArrays(1, &VAO);
-
-        const auto vertPosSize = sizeof(vertPos);
-
         const auto BUFFER_SIZE = vertPosSize;
 
-        glGenBuffers(1, &VBO);
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, BUFFER_SIZE, nullptr, GL_STATIC_DRAW);
+        auto [VBO, VAO] = reserveVertexMemory(BUFFER_SIZE);
 
         glBufferSubData(GL_ARRAY_BUFFER, 0, vertPosSize, vertPos.data());
 
@@ -175,19 +171,10 @@ class CubeNorm : public AbstractCube
 public:
     std::tuple<unsigned int, unsigned int> setupBuffers() override
     {
-        unsigned int VBO;
-        unsigned int VAO;
-        glGenVertexArrays(1, &VAO);
-
-        const auto vertPosSize = sizeof(vertPos);
-        const auto vertNormSize = sizeof(vertNorm);
-
         const auto BUFFER_SIZE = vertPosSize + vertNormSize;
         const auto normOffset = vertPosSize;
 
-        glGenBuffers(1, &VBO);
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, BUFFER_SIZE, nullptr, GL_STATIC_DRAW);
+        auto [VBO, VAO] = reserveVertexMemory(BUFFER_SIZE);
 
         glBufferSubData(GL_ARRAY_BUFFER, 0, vertPosSize, vertPos.data());
         glBufferSubData(GL_ARRAY_BUFFER, normOffset, vertNormSize, vertNorm.data());
@@ -210,21 +197,11 @@ class CubeTex : public AbstractCube
 public:
     std::tuple<unsigned int, unsigned int> setupBuffers() override
     {
-        unsigned int VBO;
-        unsigned int VAO;
-        glGenVertexArrays(1, &VAO);
-
-        auto vertPosSize = sizeof(vertPos);
-        auto vertNormSize = sizeof(vertNorm);
-        auto texCoordSize = sizeof(texCoords);
-
         auto BUFFER_SIZE = vertPosSize + vertNormSize + texCoordSize;
         auto normOffset = vertPosSize;
         auto texCoordsOffset = normOffset + vertNormSize;
 
-        glGenBuffers(1, &VBO);
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, BUFFER_SIZE, nullptr, GL_STATIC_DRAW);
+        auto [VBO, VAO] = reserveVertexMemory(BUFFER_SIZE);
 
         glBufferSubData(GL_ARRAY_BUFFER, 0, vertPosSize, vertPos.data());
         glBufferSubData(GL_ARRAY_BUFFER, normOffset, vertNormSize, vertNorm.data());
