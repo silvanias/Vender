@@ -8,9 +8,11 @@
 class AbstractPyramid : public AbstractShape
 {
 public:
+    void render() const override = 0;
     ~AbstractPyramid() override = default;
 
 protected:
+    void setupBuffers() override = 0;
     const std::array<float, 54> vertPos = {
         0.0f, 0.5f, 0.0f,
         -0.5f, -0.5f, 0.5f,
@@ -93,29 +95,72 @@ protected:
 class PyramidDefault : public AbstractPyramid
 {
 public:
-    std::tuple<unsigned int, unsigned int> setupBuffers() override
+    PyramidDefault()
+    {
+        setupBuffers();
+    }
+
+    void render() const override
+    {
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 18);
+    }
+
+    ~PyramidDefault()
+    {
+        glDeleteBuffers(1, &VBO);
+        glDeleteVertexArrays(1, &VAO);
+    }
+
+private:
+    unsigned int VBO;
+    unsigned int VAO;
+
+    void setupBuffers() override
     {
         const auto BUFFER_SIZE = vertPosSize;
-        auto [VBO, VAO] = reserveVertexMemory(BUFFER_SIZE);
+        auto [_VBO, _VAO] = reserveVertexMemory(BUFFER_SIZE);
+        VBO = _VBO;
+        VAO = _VAO;
 
         glBufferSubData(GL_ARRAY_BUFFER, 0, vertPosSize, vertPos.data());
-
         glBindVertexArray(VAO);
-
         enableVertexAttribute(0, 3, 3 * sizeof(float), 0);
-        return {VBO, VAO};
     };
 };
 
 class PyramidNorm : public AbstractPyramid
 {
 public:
-    std::tuple<unsigned int, unsigned int> setupBuffers() override
+    PyramidNorm()
+    {
+        setupBuffers();
+    }
+
+    void render() const override
+    {
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 18);
+    }
+
+    ~PyramidNorm()
+    {
+        glDeleteBuffers(1, &VBO);
+        glDeleteVertexArrays(1, &VAO);
+    }
+
+private:
+    unsigned int VBO;
+    unsigned int VAO;
+
+    void setupBuffers() override
     {
         const auto BUFFER_SIZE = vertPosSize + vertNormSize;
         const auto normOffset = vertPosSize;
-        auto [VBO, VAO] = reserveVertexMemory(BUFFER_SIZE);
+        auto [_VBO, _VAO] = reserveVertexMemory(BUFFER_SIZE);
 
+        VBO = _VBO;
+        VAO = _VAO;
         glBufferSubData(GL_ARRAY_BUFFER, 0, vertPosSize, vertPos.data());
         glBufferSubData(GL_ARRAY_BUFFER, normOffset, vertNormSize, vertNorm.data());
 
@@ -123,20 +168,42 @@ public:
 
         enableVertexAttribute(0, 3, 3 * sizeof(float), 0);
         enableVertexAttribute(1, 3, 3 * sizeof(float), normOffset);
-        return {VBO, VAO};
     };
 };
 
 class PyramidTex : public AbstractPyramid
 {
 public:
-    std::tuple<unsigned int, unsigned int> setupBuffers() override
+    PyramidTex()
+    {
+        setupBuffers();
+    }
+
+    void render() const override
+    {
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 18);
+    }
+
+    ~PyramidTex()
+    {
+        glDeleteBuffers(1, &VBO);
+        glDeleteVertexArrays(1, &VAO);
+    }
+
+private:
+    unsigned int VBO;
+    unsigned int VAO;
+
+    void setupBuffers() override
     {
         auto BUFFER_SIZE = vertPosSize + vertNormSize + texCoordSize;
         auto normOffset = vertPosSize;
         auto texCoordsOffset = normOffset + vertNormSize;
 
-        auto [VBO, VAO] = reserveVertexMemory(BUFFER_SIZE);
+        auto [_VBO, _VAO] = reserveVertexMemory(BUFFER_SIZE);
+        VBO = _VBO;
+        VAO = _VAO;
 
         glBufferSubData(GL_ARRAY_BUFFER, 0, vertPosSize, vertPos.data());
         glBufferSubData(GL_ARRAY_BUFFER, normOffset, vertNormSize, vertNorm.data());
@@ -147,6 +214,5 @@ public:
         enableVertexAttribute(0, 3, 3 * sizeof(float), 0);
         enableVertexAttribute(1, 3, 3 * sizeof(float), normOffset);
         enableVertexAttribute(2, 2, 2 * sizeof(float), texCoordsOffset);
-        return {VBO, VAO};
     }
 };

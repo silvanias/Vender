@@ -3,7 +3,9 @@
 class AbstractShape
 {
 public:
-    virtual std::tuple<unsigned int, unsigned int> setupBuffers() = 0;
+    AbstractShape() = default;
+    virtual void setupBuffers() = 0;
+    virtual void render() const = 0;
     virtual ~AbstractShape() = default;
 
 protected:

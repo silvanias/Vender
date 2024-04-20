@@ -8,9 +8,11 @@
 class AbstractCube : public AbstractShape
 {
 public:
+    void render() const override = 0;
     ~AbstractCube() override = default;
 
 protected:
+    void setupBuffers() override = 0;
     const std::array<float, 108> vertPos = {
         -0.5f, -0.5f, -0.5f,
         0.5f, -0.5f, -0.5f,
@@ -148,29 +150,69 @@ protected:
 class CubeDefault : public AbstractCube
 {
 public:
-    std::tuple<unsigned int, unsigned int> setupBuffers() override
+    CubeDefault()
+    {
+        setupBuffers();
+    }
+
+    void render() const override
+    {
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
+    ~CubeDefault() override
+    {
+        glDeleteBuffers(1, &VBO);
+        glDeleteVertexArrays(1, &VAO);
+    };
+
+private:
+    unsigned int VBO;
+    unsigned int VAO;
+    void setupBuffers() override
     {
         const auto BUFFER_SIZE = vertPosSize;
 
-        auto [VBO, VAO] = reserveVertexMemory(BUFFER_SIZE);
+        auto [_VBO, _VAO] = reserveVertexMemory(BUFFER_SIZE);
+        VBO = _VBO;
+        VAO = _VAO;
 
         glBufferSubData(GL_ARRAY_BUFFER, 0, vertPosSize, vertPos.data());
 
         glBindVertexArray(VAO);
         enableVertexAttribute(0, 3, 3 * sizeof(float), 0);
-        return {VBO, VAO};
     };
 };
 
 class CubeNorm : public AbstractCube
 {
 public:
-    std::tuple<unsigned int, unsigned int> setupBuffers() override
+    CubeNorm()
+    {
+        setupBuffers();
+    }
+
+    void render() const override
+    {
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
+
+    ~CubeNorm() override
+    {
+        glDeleteBuffers(1, &VBO);
+        glDeleteVertexArrays(1, &VAO);
+    };
+
+private:
+    void setupBuffers() override
     {
         const auto BUFFER_SIZE = vertPosSize + vertNormSize;
         const auto normOffset = vertPosSize;
 
-        auto [VBO, VAO] = reserveVertexMemory(BUFFER_SIZE);
+        auto [_VBO, _VAO] = reserveVertexMemory(BUFFER_SIZE);
+        VBO = _VBO;
+        VAO = _VAO;
 
         glBufferSubData(GL_ARRAY_BUFFER, 0, vertPosSize, vertPos.data());
         glBufferSubData(GL_ARRAY_BUFFER, normOffset, vertNormSize, vertNorm.data());
@@ -178,20 +220,41 @@ public:
         glBindVertexArray(VAO);
         enableVertexAttribute(0, 3, 3 * sizeof(float), 0);
         enableVertexAttribute(1, 3, 3 * sizeof(float), normOffset);
-        return {VBO, VAO};
     };
+    unsigned int VBO;
+    unsigned int VAO;
 };
 
 class CubeTex : public AbstractCube
 {
 public:
-    std::tuple<unsigned int, unsigned int> setupBuffers() override
+    CubeTex()
+    {
+        setupBuffers();
+    }
+
+    void render() const override
+    {
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
+
+    ~CubeTex() override
+    {
+        glDeleteBuffers(1, &VBO);
+        glDeleteVertexArrays(1, &VAO);
+    };
+
+private:
+    void setupBuffers() override
     {
         auto BUFFER_SIZE = vertPosSize + vertNormSize + texCoordSize;
         auto normOffset = vertPosSize;
         auto texCoordsOffset = normOffset + vertNormSize;
 
-        auto [VBO, VAO] = reserveVertexMemory(BUFFER_SIZE);
+        auto [_VBO, _VAO] = reserveVertexMemory(BUFFER_SIZE);
+        VBO = _VBO;
+        VAO = _VAO;
 
         glBufferSubData(GL_ARRAY_BUFFER, 0, vertPosSize, vertPos.data());
         glBufferSubData(GL_ARRAY_BUFFER, normOffset, vertNormSize, vertNorm.data());
@@ -201,6 +264,7 @@ public:
         enableVertexAttribute(0, 3, 3 * sizeof(float), 0);
         enableVertexAttribute(1, 3, 3 * sizeof(float), normOffset);
         enableVertexAttribute(2, 2, 2 * sizeof(float), texCoordsOffset);
-        return {VBO, VAO};
     }
+    unsigned int VBO;
+    unsigned int VAO;
 };

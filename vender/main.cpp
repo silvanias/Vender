@@ -57,11 +57,6 @@ int main()
   PyramidNorm pyramidNorm;
   PyramidTex pyramidTex;
   CubeDefault lightCube;
-  auto [VBOCubeNorm, VAOCubeNorm] = cubeNorm.setupBuffers();
-  auto [VBOCubeTex, VAOCubeTex] = cubeTex.setupBuffers();
-  auto [VBOPyramidNorm, VAOPyramidNorm] = pyramidNorm.setupBuffers();
-  auto [VBOPyramidTex, VAOPyramidTex] = pyramidTex.setupBuffers();
-  auto [VBOLight, VAOLight] = lightCube.setupBuffers();
 
   Material material = mat_generic;
   unsigned int diffuseMap = loadTexture("../assets/textures/container.png");
@@ -117,8 +112,7 @@ int main()
     lightShader.setMat4("model", model);
 
     // Draw the light cube
-    glBindVertexArray(VAOLight);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
+    lightCube.render();
 
     // Normal cube rendering
     // ---------------------------------------------
@@ -145,15 +139,11 @@ int main()
       // TODO: Fix this whole ordeal
       if (selectedShape < 1)
       {
-        // Draw the cube
-        glBindVertexArray(VAOCubeNorm);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        cubeNorm.render();
       }
       else
       {
-        // Temporary Pyramid Rendering
-        glBindVertexArray(VAOPyramidNorm);
-        glDrawArrays(GL_TRIANGLES, 0, 18);
+        pyramidNorm.render();
       }
     }
 
@@ -187,14 +177,11 @@ int main()
 
       if (selectedShape < 1)
       {
-        glBindVertexArray(VAOCubeTex);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        cubeTex.render();
       }
       else
       {
-        // Temporary Pyramid Rendering
-        glBindVertexArray(VAOPyramidTex);
-        glDrawArrays(GL_TRIANGLES, 0, 24);
+        pyramidTex.render();
       }
     }
 
@@ -246,18 +233,6 @@ int main()
     glfwSwapBuffers(window);
     glfwPollEvents();
   }
-
-  glDeleteVertexArrays(1, &VAOCubeNorm);
-  glDeleteBuffers(1, &VBOCubeNorm);
-  glDeleteVertexArrays(1, &VAOCubeTex);
-  glDeleteBuffers(1, &VBOCubeTex);
-  glDeleteVertexArrays(1, &VAOPyramidNorm);
-  glDeleteBuffers(1, &VBOPyramidNorm);
-  glDeleteVertexArrays(1, &VAOPyramidTex);
-  glDeleteBuffers(1, &VBOPyramidTex);
-  glDeleteVertexArrays(1, &VAOLight);
-  glDeleteBuffers(1, &VBOLight);
-
   ImGuiShutdown();
   glfwShutdown(window);
   return 0;
