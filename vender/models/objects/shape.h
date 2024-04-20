@@ -4,11 +4,12 @@ class AbstractShape
 {
 public:
     AbstractShape() = default;
-    virtual void setupBuffers() = 0;
     virtual void render() const = 0;
     virtual ~AbstractShape() = default;
 
 protected:
+    virtual void setupBuffers() = 0;
+
     std::tuple<unsigned int, unsigned int> reserveVertexMemory(size_t BUFFER_SIZE)
     {
         unsigned int VBO;
