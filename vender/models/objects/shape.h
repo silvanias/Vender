@@ -17,4 +17,10 @@ protected:
         glBufferData(GL_ARRAY_BUFFER, BUFFER_SIZE, nullptr, GL_STATIC_DRAW);
         return {VBO, VAO};
     }
+
+    void enableVertexAttribute(unsigned int index, unsigned int numComponents, size_t stride, size_t offset) const
+    {
+        glVertexAttribPointer(index, numComponents, GL_FLOAT, GL_FALSE, stride, (GLvoid *)offset);
+        glEnableVertexAttribArray(index);
+    }
 };

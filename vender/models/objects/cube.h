@@ -157,11 +157,7 @@ public:
         glBufferSubData(GL_ARRAY_BUFFER, 0, vertPosSize, vertPos.data());
 
         glBindVertexArray(VAO);
-
-        // Position attribute
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (GLvoid *)nullptr);
-        glEnableVertexAttribArray(0);
-
+        enableVertexAttribute(0, 3, 3 * sizeof(float), 0);
         return {VBO, VAO};
     };
 };
@@ -180,14 +176,8 @@ public:
         glBufferSubData(GL_ARRAY_BUFFER, normOffset, vertNormSize, vertNorm.data());
 
         glBindVertexArray(VAO);
-
-        // Position attribute
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (GLvoid *)nullptr);
-        glEnableVertexAttribArray(0);
-        // Normal attribute
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (GLvoid *)normOffset);
-        glEnableVertexAttribArray(1);
-
+        enableVertexAttribute(0, 3, 3 * sizeof(float), 0);
+        enableVertexAttribute(1, 3, 3 * sizeof(float), normOffset);
         return {VBO, VAO};
     };
 };
@@ -208,17 +198,9 @@ public:
         glBufferSubData(GL_ARRAY_BUFFER, texCoordsOffset, texCoordSize, texCoords.data());
 
         glBindVertexArray(VAO);
-
-        // Position attribute
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (GLvoid *)nullptr);
-        glEnableVertexAttribArray(0);
-        // Normal attribute
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (GLvoid *)normOffset);
-        glEnableVertexAttribArray(1);
-        // Texture attribute
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (GLvoid *)texCoordsOffset);
-        glEnableVertexAttribArray(2);
-
+        enableVertexAttribute(0, 3, 3 * sizeof(float), 0);
+        enableVertexAttribute(1, 3, 3 * sizeof(float), normOffset);
+        enableVertexAttribute(2, 2, 2 * sizeof(float), texCoordsOffset);
         return {VBO, VAO};
     }
 };
