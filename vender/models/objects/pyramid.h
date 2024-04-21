@@ -8,17 +8,6 @@
 class AbstractPyramid : public AbstractShape
 {
 protected:
-    void setupBuffers() override
-    {
-        const auto BUFFER_SIZE = getVertexDataSize();
-        auto [VBO, VAO] = reserveVertexMemory(BUFFER_SIZE);
-        setupVAO(VAO);
-        setupVBO(VBO, BUFFER_SIZE);
-    };
-    virtual size_t getVertexDataSize() const = 0;
-    virtual void setupVAO(unsigned int VAO) = 0;
-    virtual void setupVBO(unsigned int VBO, size_t BUFFER_SIZE) = 0;
-
     const std::array<float, 54> vertPos = {
         0.0f, 0.5f, 0.0f,
         -0.5f, -0.5f, 0.5f,
@@ -131,7 +120,7 @@ protected:
         enableVertexAttribute(0, 3, 3 * sizeof(float), 0);
     }
 
-    void setupVBO(unsigned int _VBO, size_t BUFFER_SIZE) override
+    void setupVBO(unsigned int _VBO) override
     {
         VBO = _VBO;
         glBufferSubData(GL_ARRAY_BUFFER, 0, vertPosSize, vertPos.data());
@@ -176,7 +165,7 @@ protected:
         enableVertexAttribute(1, 3, 3 * sizeof(float), vertPosSize);
     }
 
-    void setupVBO(unsigned int _VBO, size_t BUFFER_SIZE) override
+    void setupVBO(unsigned int _VBO) override
     {
         VBO = _VBO;
         glBufferSubData(GL_ARRAY_BUFFER, 0, vertPosSize, vertPos.data());
@@ -223,7 +212,7 @@ protected:
         enableVertexAttribute(2, 2, 2 * sizeof(float), vertPosSize + vertNormSize);
     }
 
-    void setupVBO(unsigned int _VBO, size_t BUFFER_SIZE) override
+    void setupVBO(unsigned int _VBO) override
     {
         VBO = _VBO;
         glBufferSubData(GL_ARRAY_BUFFER, 0, vertPosSize, vertPos.data());
