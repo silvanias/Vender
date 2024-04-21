@@ -7,12 +7,18 @@
 
 class AbstractCube : public AbstractShape
 {
-public:
-    void render() const override = 0;
-    ~AbstractCube() override = default;
-
 protected:
-    void setupBuffers() override = 0;
+    void setupBuffers() override
+    {
+        const auto BUFFER_SIZE = getVertexDataSize();
+        auto [VBO, VAO] = reserveVertexMemory(BUFFER_SIZE);
+        setupVAO(VAO);
+        setupVBO(VBO, BUFFER_SIZE);
+    };
+    virtual size_t getVertexDataSize() const = 0;
+    virtual void setupVAO(unsigned int VAO) = 0;
+    virtual void setupVBO(unsigned int VBO, size_t BUFFER_SIZE) = 0;
+
     const std::array<float, 108> vertPos = {
         -0.5f, -0.5f, -0.5f,
         0.5f, -0.5f, -0.5f,
@@ -99,7 +105,7 @@ protected:
         0.0f, 1.0f, 0.0f,
         0.0f, 1.0f, 0.0f};
 
-    const std::array<float, 72> texCoords = {
+    static const std::array<float, 72> texCoords = {
         0.0f, 0.0f,
         1.0f, 0.0f,
         1.0f, 1.0f,
@@ -166,22 +172,28 @@ public:
         glDeleteVertexArrays(1, &VAO);
     };
 
+protected:
+    size_t getVertexDataSize() const override
+    {
+        return vertPosSize;
+    }
+
+    void setupVAO(unsigned int _VAO) override
+    {
+        VAO = _VAO;
+        glBindVertexArray(VAO);
+        enableVertexAttribute(0, 3, 3 * sizeof(float), 0);
+    }
+
+    void setupVBO(unsigned int _VBO, size_t BUFFER_SIZE) override
+    {
+        VBO = _VBO;
+        glBufferSubData(GL_ARRAY_BUFFER, 0, vertPosSize, vertPos.data());
+    }
+
 private:
     unsigned int VBO;
     unsigned int VAO;
-    void setupBuffers() override
-    {
-        const auto BUFFER_SIZE = vertPosSize;
-
-        auto [_VBO, _VAO] = reserveVertexMemory(BUFFER_SIZE);
-        VBO = _VBO;
-        VAO = _VAO;
-
-        glBufferSubData(GL_ARRAY_BUFFER, 0, vertPosSize, vertPos.data());
-
-        glBindVertexArray(VAO);
-        enableVertexAttribute(0, 3, 3 * sizeof(float), 0);
-    };
 };
 
 class CubeNorm : public AbstractCube
@@ -204,23 +216,28 @@ public:
         glDeleteVertexArrays(1, &VAO);
     };
 
-private:
-    void setupBuffers() override
+protected:
+    size_t getVertexDataSize() const override
     {
-        const auto BUFFER_SIZE = vertPosSize + vertNormSize;
-        const auto normOffset = vertPosSize;
+        return vertPosSize + vertNormSize + texCoordSize;
+    }
 
-        auto [_VBO, _VAO] = reserveVertexMemory(BUFFER_SIZE);
-        VBO = _VBO;
+    void setupVAO(unsigned int _VAO) override
+    {
         VAO = _VAO;
-
-        glBufferSubData(GL_ARRAY_BUFFER, 0, vertPosSize, vertPos.data());
-        glBufferSubData(GL_ARRAY_BUFFER, normOffset, vertNormSize, vertNorm.data());
-
         glBindVertexArray(VAO);
         enableVertexAttribute(0, 3, 3 * sizeof(float), 0);
-        enableVertexAttribute(1, 3, 3 * sizeof(float), normOffset);
-    };
+        enableVertexAttribute(1, 3, 3 * sizeof(float), vertPosSize);
+    }
+
+    void setupVBO(unsigned int _VBO, size_t BUFFER_SIZE) override
+    {
+        VBO = _VBO;
+        glBufferSubData(GL_ARRAY_BUFFER, 0, vertPosSize, vertPos.data());
+        glBufferSubData(GL_ARRAY_BUFFER, vertPosSize, vertNormSize, vertNorm.data());
+    }
+
+private:
     unsigned int VBO;
     unsigned int VAO;
 };
@@ -245,26 +262,30 @@ public:
         glDeleteVertexArrays(1, &VAO);
     };
 
-private:
-    void setupBuffers() override
+protected:
+    size_t getVertexDataSize() const override
     {
-        auto BUFFER_SIZE = vertPosSize + vertNormSize + texCoordSize;
-        auto normOffset = vertPosSize;
-        auto texCoordsOffset = normOffset + vertNormSize;
+        return vertPosSize + vertNormSize + texCoordSize;
+    }
 
-        auto [_VBO, _VAO] = reserveVertexMemory(BUFFER_SIZE);
-        VBO = _VBO;
+    void setupVAO(unsigned int _VAO) override
+    {
         VAO = _VAO;
-
-        glBufferSubData(GL_ARRAY_BUFFER, 0, vertPosSize, vertPos.data());
-        glBufferSubData(GL_ARRAY_BUFFER, normOffset, vertNormSize, vertNorm.data());
-        glBufferSubData(GL_ARRAY_BUFFER, texCoordsOffset, texCoordSize, texCoords.data());
-
         glBindVertexArray(VAO);
         enableVertexAttribute(0, 3, 3 * sizeof(float), 0);
-        enableVertexAttribute(1, 3, 3 * sizeof(float), normOffset);
-        enableVertexAttribute(2, 2, 2 * sizeof(float), texCoordsOffset);
+        enableVertexAttribute(1, 3, 3 * sizeof(float), vertPosSize);
+        enableVertexAttribute(2, 2, 2 * sizeof(float), vertPosSize + vertNormSize);
     }
+
+    void setupVBO(unsigned int _VBO, size_t BUFFER_SIZE) override
+    {
+        VBO = _VBO;
+        glBufferSubData(GL_ARRAY_BUFFER, 0, vertPosSize, vertPos.data());
+        glBufferSubData(GL_ARRAY_BUFFER, vertPosSize, vertNormSize, vertNorm.data());
+        glBufferSubData(GL_ARRAY_BUFFER, vertPosSize + vertNormSize, texCoordSize, texCoords.data());
+    }
+
+private:
     unsigned int VBO;
     unsigned int VAO;
 };
