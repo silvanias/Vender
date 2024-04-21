@@ -20,8 +20,8 @@
 #include "shaders/shader.h"
 #include "assets/texture.h"
 #include "assets/material.h"
-#include "models/objects/cube.h"
-#include "models/objects/pyramid.h"
+#include "models/objects/cube/cube.h"
+#include "models/objects/pyramid/pyramid.h"
 #include "models/lighting/light.h"
 
 int main()
