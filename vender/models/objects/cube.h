@@ -5,10 +5,9 @@
 
 #include "shape.h"
 
-class AbstractCube : public AbstractShape
+struct CubeData
 {
-protected:
-    const std::array<float, 108> vertPos = {
+    static constexpr std::array<float, 108> vertPos = {
         -0.5f, -0.5f, -0.5f,
         0.5f, -0.5f, -0.5f,
         0.5f, 0.5f, -0.5f,
@@ -51,7 +50,7 @@ protected:
         -0.5f, 0.5f, 0.5f,
         -0.5f, 0.5f, -0.5f};
 
-    const std::array<float, 108> vertNorm = {
+    static constexpr std::array<float, 108> vertNorm = {
         0.0f, 0.0f, -1.0f,
         0.0f, 0.0f, -1.0f,
         0.0f, 0.0f, -1.0f,
@@ -94,7 +93,7 @@ protected:
         0.0f, 1.0f, 0.0f,
         0.0f, 1.0f, 0.0f};
 
-    const std::array<float, 72> texCoords = {
+    static constexpr std::array<float, 72> texCoords = {
         0.0f, 0.0f,
         1.0f, 0.0f,
         1.0f, 1.0f,
@@ -142,7 +141,7 @@ protected:
     static constexpr size_t texCoordSize = sizeof(texCoords);
 };
 
-class CubeDefault : public AbstractCube
+class CubeDefault : public AbstractShape
 {
 public:
     CubeDefault()
@@ -164,7 +163,7 @@ public:
 protected:
     size_t getVertexDataSize() const override
     {
-        return vertPosSize;
+        return CubeData::vertPosSize;
     }
 
     void setupVAO(unsigned int _VAO) override
@@ -177,7 +176,7 @@ protected:
     void setupVBO(unsigned int _VBO) override
     {
         VBO = _VBO;
-        glBufferSubData(GL_ARRAY_BUFFER, 0, vertPosSize, vertPos.data());
+        glBufferSubData(GL_ARRAY_BUFFER, 0, CubeData::vertPosSize, CubeData::vertPos.data());
     }
 
 private:
@@ -185,7 +184,7 @@ private:
     unsigned int VAO;
 };
 
-class CubeNorm : public AbstractCube
+class CubeNorm : public AbstractShape
 {
 public:
     CubeNorm()
@@ -208,7 +207,7 @@ public:
 protected:
     size_t getVertexDataSize() const override
     {
-        return vertPosSize + vertNormSize + texCoordSize;
+        return CubeData::vertPosSize + CubeData::vertNormSize + CubeData::texCoordSize;
     }
 
     void setupVAO(unsigned int _VAO) override
@@ -216,14 +215,14 @@ protected:
         VAO = _VAO;
         glBindVertexArray(VAO);
         enableVertexAttribute(0, 3, 3 * sizeof(float), 0);
-        enableVertexAttribute(1, 3, 3 * sizeof(float), vertPosSize);
+        enableVertexAttribute(1, 3, 3 * sizeof(float), CubeData::vertPosSize);
     }
 
     void setupVBO(unsigned int _VBO) override
     {
         VBO = _VBO;
-        glBufferSubData(GL_ARRAY_BUFFER, 0, vertPosSize, vertPos.data());
-        glBufferSubData(GL_ARRAY_BUFFER, vertPosSize, vertNormSize, vertNorm.data());
+        glBufferSubData(GL_ARRAY_BUFFER, 0, CubeData::vertPosSize, CubeData::vertPos.data());
+        glBufferSubData(GL_ARRAY_BUFFER, CubeData::vertPosSize, CubeData::vertNormSize, CubeData::vertNorm.data());
     }
 
 private:
@@ -231,7 +230,7 @@ private:
     unsigned int VAO;
 };
 
-class CubeTex : public AbstractCube
+class CubeTex : public AbstractShape
 {
 public:
     CubeTex()
@@ -254,7 +253,7 @@ public:
 protected:
     size_t getVertexDataSize() const override
     {
-        return vertPosSize + vertNormSize + texCoordSize;
+        return CubeData::vertPosSize + CubeData::vertNormSize + CubeData::texCoordSize;
     }
 
     void setupVAO(unsigned int _VAO) override
@@ -262,16 +261,16 @@ protected:
         VAO = _VAO;
         glBindVertexArray(VAO);
         enableVertexAttribute(0, 3, 3 * sizeof(float), 0);
-        enableVertexAttribute(1, 3, 3 * sizeof(float), vertPosSize);
-        enableVertexAttribute(2, 2, 2 * sizeof(float), vertPosSize + vertNormSize);
+        enableVertexAttribute(1, 3, 3 * sizeof(float), CubeData::vertPosSize);
+        enableVertexAttribute(2, 2, 2 * sizeof(float), CubeData::vertPosSize + CubeData::vertNormSize);
     }
 
     void setupVBO(unsigned int _VBO) override
     {
         VBO = _VBO;
-        glBufferSubData(GL_ARRAY_BUFFER, 0, vertPosSize, vertPos.data());
-        glBufferSubData(GL_ARRAY_BUFFER, vertPosSize, vertNormSize, vertNorm.data());
-        glBufferSubData(GL_ARRAY_BUFFER, vertPosSize + vertNormSize, texCoordSize, texCoords.data());
+        glBufferSubData(GL_ARRAY_BUFFER, 0, CubeData::vertPosSize, CubeData::vertPos.data());
+        glBufferSubData(GL_ARRAY_BUFFER, CubeData::vertPosSize, CubeData::vertNormSize, CubeData::vertNorm.data());
+        glBufferSubData(GL_ARRAY_BUFFER, CubeData::vertPosSize + CubeData::vertNormSize, CubeData::texCoordSize, CubeData::texCoords.data());
     }
 
 private:

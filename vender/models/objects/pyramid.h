@@ -5,10 +5,9 @@
 
 #include "shape.h"
 
-class AbstractPyramid : public AbstractShape
+struct PyramidData
 {
-protected:
-    const std::array<float, 54> vertPos = {
+    static constexpr std::array<float, 54> vertPos = {
         0.0f, 0.5f, 0.0f,
         -0.5f, -0.5f, 0.5f,
         0.5f, -0.5f, 0.5f,
@@ -33,7 +32,7 @@ protected:
         -0.5f, -0.5f, 0.5f,
         -0.5f, -0.5f, -0.5f};
 
-    const std::array<float, 54> vertNorm = {
+    static constexpr std::array<float, 54> vertNorm = {
         0.0f, 0.71f, 0.71f,
         0.0f, 0.71f, 0.71f,
         0.0f, 0.71f, 0.71f,
@@ -58,7 +57,7 @@ protected:
         0.0f, -1.0f, 0.0f,
         0.0f, -1.0f, 0.0f};
 
-    const std::array<float, 36> texCoords = {
+    static constexpr std::array<float, 36> texCoords = {
         0.5f, 1.0f,
         0.0f, 0.0f,
         1.0f, 0.0f,
@@ -87,7 +86,7 @@ protected:
     static constexpr size_t texCoordSize = sizeof(texCoords);
 };
 
-class PyramidDefault : public AbstractPyramid
+class PyramidDefault : public AbstractShape
 {
 public:
     PyramidDefault()
@@ -110,7 +109,7 @@ public:
 protected:
     size_t getVertexDataSize() const override
     {
-        return vertPosSize;
+        return PyramidData::vertPosSize;
     }
 
     void setupVAO(unsigned int _VAO) override
@@ -123,7 +122,7 @@ protected:
     void setupVBO(unsigned int _VBO) override
     {
         VBO = _VBO;
-        glBufferSubData(GL_ARRAY_BUFFER, 0, vertPosSize, vertPos.data());
+        glBufferSubData(GL_ARRAY_BUFFER, 0, PyramidData::vertPosSize, PyramidData::vertPos.data());
     }
 
 private:
@@ -131,7 +130,7 @@ private:
     unsigned int VAO;
 };
 
-class PyramidNorm : public AbstractPyramid
+class PyramidNorm : public AbstractShape
 {
 public:
     PyramidNorm()
@@ -154,7 +153,7 @@ public:
 protected:
     size_t getVertexDataSize() const override
     {
-        return vertPosSize + vertNormSize + texCoordSize;
+        return PyramidData::vertPosSize + PyramidData::vertNormSize + PyramidData::texCoordSize;
     }
 
     void setupVAO(unsigned int _VAO) override
@@ -162,14 +161,14 @@ protected:
         VAO = _VAO;
         glBindVertexArray(VAO);
         enableVertexAttribute(0, 3, 3 * sizeof(float), 0);
-        enableVertexAttribute(1, 3, 3 * sizeof(float), vertPosSize);
+        enableVertexAttribute(1, 3, 3 * sizeof(float), PyramidData::vertPosSize);
     }
 
     void setupVBO(unsigned int _VBO) override
     {
         VBO = _VBO;
-        glBufferSubData(GL_ARRAY_BUFFER, 0, vertPosSize, vertPos.data());
-        glBufferSubData(GL_ARRAY_BUFFER, vertPosSize, vertNormSize, vertNorm.data());
+        glBufferSubData(GL_ARRAY_BUFFER, 0, PyramidData::vertPosSize, PyramidData::vertPos.data());
+        glBufferSubData(GL_ARRAY_BUFFER, PyramidData::vertPosSize, PyramidData::vertNormSize, PyramidData::vertNorm.data());
     }
 
 private:
@@ -177,7 +176,7 @@ private:
     unsigned int VAO;
 };
 
-class PyramidTex : public AbstractPyramid
+class PyramidTex : public AbstractShape
 {
 public:
     PyramidTex()
@@ -200,7 +199,7 @@ public:
 protected:
     size_t getVertexDataSize() const override
     {
-        return vertPosSize + vertNormSize + texCoordSize;
+        return PyramidData::vertPosSize + PyramidData::vertNormSize + PyramidData::texCoordSize;
     }
 
     void setupVAO(unsigned int _VAO) override
@@ -208,16 +207,16 @@ protected:
         VAO = _VAO;
         glBindVertexArray(VAO);
         enableVertexAttribute(0, 3, 3 * sizeof(float), 0);
-        enableVertexAttribute(1, 3, 3 * sizeof(float), vertPosSize);
-        enableVertexAttribute(2, 2, 2 * sizeof(float), vertPosSize + vertNormSize);
+        enableVertexAttribute(1, 3, 3 * sizeof(float), PyramidData::vertPosSize);
+        enableVertexAttribute(2, 2, 2 * sizeof(float), PyramidData::vertPosSize + PyramidData::vertNormSize);
     }
 
     void setupVBO(unsigned int _VBO) override
     {
         VBO = _VBO;
-        glBufferSubData(GL_ARRAY_BUFFER, 0, vertPosSize, vertPos.data());
-        glBufferSubData(GL_ARRAY_BUFFER, vertPosSize, vertNormSize, vertNorm.data());
-        glBufferSubData(GL_ARRAY_BUFFER, vertPosSize + vertNormSize, texCoordSize, texCoords.data());
+        glBufferSubData(GL_ARRAY_BUFFER, 0, PyramidData::vertPosSize, PyramidData::vertPos.data());
+        glBufferSubData(GL_ARRAY_BUFFER, PyramidData::vertPosSize, PyramidData::vertNormSize, PyramidData::vertNorm.data());
+        glBufferSubData(GL_ARRAY_BUFFER, PyramidData::vertPosSize + PyramidData::vertNormSize, PyramidData::texCoordSize, PyramidData::texCoords.data());
     }
 
 private:
