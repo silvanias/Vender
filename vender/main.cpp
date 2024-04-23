@@ -31,16 +31,17 @@ enum ShaderIdx
   light,
 };
 
+enum ObjectIdx
+{
+  cubeNorm,
+  cubeTex,
+  pyramidNorm,
+  pyramidTex,
+  lightCube,
+};
+
 void renderLoop(GLFWwindow *window, const std::unique_ptr<AppData> &appData, const ImVec4 &clear_color, std::array<std::unique_ptr<Shader>, 3> &shaders, std::array<AbstractShape *, 5> &objects, Light &light, Material &material, unsigned int diffuseMap, unsigned int specularMap, int &selectedMaterial, int &selectedShape)
 {
-
-  // Object indices
-  const int cubeNormIdx = 0;
-  const int cubeTexIdx = 1;
-  const int pyramidNormIdx = 2;
-  const int pyramidTexIdx = 3;
-  const int lightCubeIdx = 4;
-
   while (!glfwWindowShouldClose(window))
   {
     const Camera &camera = Camera::getInstance();
@@ -54,23 +55,19 @@ void renderLoop(GLFWwindow *window, const std::unique_ptr<AppData> &appData, con
 
     // Light rendering
     // -----------------------
-    shaders[ShaderIdx::light]->use();
-    shaders[ShaderIdx::light]->setVec3("lightColor", light.color);
 
     glm::mat4 projection = glm::perspective(glm::radians(camera.fov), (float)appData->framebufferWidth / (float)appData->framebufferHeight, 0.1f, 100.0f);
-    shaders[ShaderIdx::light]->setMat4("projection", projection);
-
     glm::mat4 view = camera.calculateView();
-    shaders[ShaderIdx::light]->setMat4("view", view);
-
     auto model = glm::mat4(1.0f);
     model = glm::translate(model, light.pos);
     model = glm::scale(model, glm::vec3(0.2f));
 
+    shaders[ShaderIdx::light]->use();
+    shaders[ShaderIdx::light]->setVec3("lightColor", light.color);
+    shaders[ShaderIdx::light]->setMat4("projection", projection);
+    shaders[ShaderIdx::light]->setMat4("view", view);
     shaders[ShaderIdx::light]->setMat4("model", model);
-
-    // Draw the light cube
-    objects[lightCubeIdx]->render();
+    objects[ObjectIdx::lightCube]->render();
 
     // Normal cube rendering
     // ---------------------------------------------
@@ -97,11 +94,11 @@ void renderLoop(GLFWwindow *window, const std::unique_ptr<AppData> &appData, con
       // TODO: Fix this whole ordeal
       if (selectedShape < 1)
       {
-        objects[cubeNormIdx]->render();
+        objects[ObjectIdx::cubeNorm]->render();
       }
       else
       {
-        objects[pyramidNormIdx]->render();
+        objects[ObjectIdx::pyramidNorm]->render();
       }
     }
 
@@ -135,11 +132,11 @@ void renderLoop(GLFWwindow *window, const std::unique_ptr<AppData> &appData, con
 
       if (selectedShape < 1)
       {
-        objects[cubeTexIdx]->render();
+        objects[ObjectIdx::cubeTex]->render();
       }
       else
       {
-        objects[pyramidTexIdx]->render();
+        objects[ObjectIdx::pyramidTex]->render();
       }
     }
 
