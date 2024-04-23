@@ -24,65 +24,23 @@
 #include "models/objects/pyramid/pyramid.h"
 #include "models/lighting/light.h"
 
-int main()
+enum ShaderIdx
 {
-  GLFWwindow *window = createWindow();
-  if (window == nullptr)
-  {
-    std::cout << "Failed to create GLFW window" << std::endl;
-    glfwTerminate();
-    return -1;
-  }
+  generic,
+  tex,
+  light,
+};
 
-  configWindow(window);
-  if (!initializeGlAD())
-  {
-    return -1;
-  }
-  glEnable(GL_DEPTH_TEST);
+void renderLoop(GLFWwindow *window, const std::unique_ptr<AppData> &appData, const ImVec4 &clear_color, std::array<std::unique_ptr<Shader>, 3> &shaders, std::array<AbstractShape *, 5> &objects, Light &light, Material &material, unsigned int diffuseMap, unsigned int specularMap, int &selectedMaterial, int &selectedShape)
+{
 
-  initImGui(window);
+  // Object indices
+  const int cubeNormIdx = 0;
+  const int cubeTexIdx = 1;
+  const int pyramidNormIdx = 2;
+  const int pyramidTexIdx = 3;
+  const int lightCubeIdx = 4;
 
-  std::unique_ptr<AppData> appData = initAppData(window);
-  glfwSetWindowUserPointer(window, appData.get());
-
-  auto clear_color = ImVec4(0.6f, 0.6f, 0.6f, 1.0f);
-
-  Shader genericShader("../vender/shaders/vertex/obj_generic.vs", "../vender/shaders/fragment/obj_generic.fs");
-  Shader texShader("../vender/shaders/vertex/obj_textured.vs", "../vender/shaders/fragment/obj_textured.fs");
-  Shader lightShader("../vender/shaders/vertex/obj_generic.vs", "../vender/shaders/fragment/point_light.fs");
-
-  CubeNorm cubeNorm;
-  CubeTex cubeTex;
-  PyramidNorm pyramidNorm;
-  PyramidTex pyramidTex;
-  CubeDefault lightCube;
-
-  Material material = mat_generic;
-  unsigned int diffuseMap = loadTexture("../assets/textures/container.png");
-  unsigned int specularMap = loadTexture("../assets/textures/container_specular.png");
-
-  // Shader configuration
-  // --------------------
-  texShader.use();
-  texShader.setInt("material.diffuse", 0);
-  texShader.setInt("material.specular", 1);
-
-  Light light;
-
-  light.pos = glm::vec3(1.0f, 0.17f, 1.6f);
-  light.color = glm::vec3(1.0f, 1.0f, 1.0f);
-  light.ambient = 0.2f;
-  light.diffuse = 0.5f;
-  light.specular = 1.0f;
-
-  // ImGui configuration
-  // --------------------
-  int selectedMaterial = 0;
-  int selectedShape = 0;
-
-  // Render loop
-  // --------------------
   while (!glfwWindowShouldClose(window))
   {
     const Camera &camera = Camera::getInstance();
@@ -96,54 +54,54 @@ int main()
 
     // Light rendering
     // -----------------------
-    lightShader.use();
-    lightShader.setVec3("lightColor", light.color);
+    shaders[ShaderIdx::light]->use();
+    shaders[ShaderIdx::light]->setVec3("lightColor", light.color);
 
     glm::mat4 projection = glm::perspective(glm::radians(camera.fov), (float)appData->framebufferWidth / (float)appData->framebufferHeight, 0.1f, 100.0f);
-    lightShader.setMat4("projection", projection);
+    shaders[ShaderIdx::light]->setMat4("projection", projection);
 
     glm::mat4 view = camera.calculateView();
-    lightShader.setMat4("view", view);
+    shaders[ShaderIdx::light]->setMat4("view", view);
 
     auto model = glm::mat4(1.0f);
     model = glm::translate(model, light.pos);
     model = glm::scale(model, glm::vec3(0.2f));
 
-    lightShader.setMat4("model", model);
+    shaders[ShaderIdx::light]->setMat4("model", model);
 
     // Draw the light cube
-    lightCube.render();
+    objects[lightCubeIdx]->render();
 
     // Normal cube rendering
     // ---------------------------------------------
     if (selectedMaterial < 2)
     {
-      genericShader.use();
-      genericShader.setVec3("viewPos", camera.cameraPos);
+      shaders[ShaderIdx::generic]->use();
+      shaders[ShaderIdx::generic]->setVec3("viewPos", camera.cameraPos);
 
-      genericShader.setVec3("light.pos", light.pos);
-      genericShader.setVec3("light.ambient", light.ambient * light.color);
-      genericShader.setVec3("light.diffuse", light.diffuse * light.color);
-      genericShader.setVec3("light.specular", light.specular * light.color);
+      shaders[ShaderIdx::generic]->setVec3("light.pos", light.pos);
+      shaders[ShaderIdx::generic]->setVec3("light.ambient", light.ambient * light.color);
+      shaders[ShaderIdx::generic]->setVec3("light.diffuse", light.diffuse * light.color);
+      shaders[ShaderIdx::generic]->setVec3("light.specular", light.specular * light.color);
 
-      genericShader.setVec3("material.ambient", material.ambient);
-      genericShader.setVec3("material.diffuse", material.diffuse);
-      genericShader.setVec3("material.specular", material.specular);
-      genericShader.setFloat("material.shininess", material.shininess);
+      shaders[ShaderIdx::generic]->setVec3("material.ambient", material.ambient);
+      shaders[ShaderIdx::generic]->setVec3("material.diffuse", material.diffuse);
+      shaders[ShaderIdx::generic]->setVec3("material.specular", material.specular);
+      shaders[ShaderIdx::generic]->setFloat("material.shininess", material.shininess);
 
-      genericShader.setMat4("projection", projection);
-      genericShader.setMat4("view", view);
+      shaders[ShaderIdx::generic]->setMat4("projection", projection);
+      shaders[ShaderIdx::generic]->setMat4("view", view);
       model = glm::mat4(1.0f);
-      genericShader.setMat4("model", model);
+      shaders[ShaderIdx::generic]->setMat4("model", model);
 
       // TODO: Fix this whole ordeal
       if (selectedShape < 1)
       {
-        cubeNorm.render();
+        objects[cubeNormIdx]->render();
       }
       else
       {
-        pyramidNorm.render();
+        objects[pyramidNormIdx]->render();
       }
     }
 
@@ -151,21 +109,21 @@ int main()
     // ---------------------------------------------
     else if (selectedMaterial == 2)
     {
-      texShader.use();
-      texShader.setVec3("viewPos", camera.cameraPos);
+      shaders[ShaderIdx::tex]->use();
+      shaders[ShaderIdx::tex]->setVec3("viewPos", camera.cameraPos);
 
-      texShader.setVec3("light.pos", light.pos);
-      texShader.setVec3("light.ambient", light.ambient * light.color);
-      texShader.setVec3("light.diffuse", light.diffuse * light.color);
-      texShader.setVec3("light.specular", light.specular * light.color);
+      shaders[ShaderIdx::tex]->setVec3("light.pos", light.pos);
+      shaders[ShaderIdx::tex]->setVec3("light.ambient", light.ambient * light.color);
+      shaders[ShaderIdx::tex]->setVec3("light.diffuse", light.diffuse * light.color);
+      shaders[ShaderIdx::tex]->setVec3("light.specular", light.specular * light.color);
 
-      texShader.setVec3("material.specular", material.specular);
-      texShader.setFloat("material.shininess", material.shininess);
+      shaders[ShaderIdx::tex]->setVec3("material.specular", material.specular);
+      shaders[ShaderIdx::tex]->setFloat("material.shininess", material.shininess);
 
-      texShader.setMat4("projection", projection);
-      texShader.setMat4("view", view);
+      shaders[ShaderIdx::tex]->setMat4("projection", projection);
+      shaders[ShaderIdx::tex]->setMat4("view", view);
       model = glm::mat4(1.0f);
-      texShader.setMat4("model", model);
+      shaders[ShaderIdx::tex]->setMat4("model", model);
 
       // Bind diffuse map
       glActiveTexture(GL_TEXTURE0);
@@ -177,11 +135,11 @@ int main()
 
       if (selectedShape < 1)
       {
-        cubeTex.render();
+        objects[cubeTexIdx]->render();
       }
       else
       {
-        pyramidTex.render();
+        objects[pyramidTexIdx]->render();
       }
     }
 
@@ -233,6 +191,77 @@ int main()
     glfwSwapBuffers(window);
     glfwPollEvents();
   }
+}
+
+std::array<std::unique_ptr<Shader>, 3> loadShaders()
+{
+  std::array<std::unique_ptr<Shader>, 3> shaders = {
+      std::make_unique<Shader>("../vender/shaders/vertex/obj_generic.vs", "../vender/shaders/fragment/obj_generic.fs"),
+      std::make_unique<Shader>("../vender/shaders/vertex/obj_textured.vs", "../vender/shaders/fragment/obj_textured.fs"),
+      std::make_unique<Shader>("../vender/shaders/vertex/obj_generic.vs", "../vender/shaders/fragment/point_light.fs")};
+  return shaders;
+}
+
+void configureShaders(std::array<std::unique_ptr<Shader>, 3> &shaders)
+{
+  shaders[ShaderIdx::tex]->use();
+  shaders[ShaderIdx::tex]->setInt("material.diffuse", 0);
+  shaders[ShaderIdx::tex]->setInt("material.specular", 1);
+}
+
+int main()
+{
+  GLFWwindow *window = createWindow();
+  if (window == nullptr)
+  {
+    std::cout << "Failed to create GLFW window" << std::endl;
+    glfwTerminate();
+    return -1;
+  }
+
+  configWindow(window);
+  if (!initializeGlAD())
+  {
+    return -1;
+  }
+  glEnable(GL_DEPTH_TEST);
+
+  initImGui(window);
+
+  const std::unique_ptr<AppData> appData = initAppData(window);
+  glfwSetWindowUserPointer(window, appData.get());
+
+  unsigned int diffuseMap = loadTexture("../assets/textures/container.png");
+  unsigned int specularMap = loadTexture("../assets/textures/container_specular.png");
+  auto shaders = loadShaders();
+  configureShaders(shaders);
+
+  CubeNorm cubeNorm;
+  CubeTex cubeTex;
+  PyramidNorm pyramidNorm;
+  PyramidTex pyramidTex;
+  CubeDefault lightCube;
+  std::array<AbstractShape *, 5> objects = {
+      &cubeNorm, &cubeTex, &pyramidNorm, &pyramidTex, &lightCube};
+
+  Material material = mat_generic;
+
+  Light light;
+
+  light.pos = glm::vec3(1.0f, 0.17f, 1.6f);
+  light.color = glm::vec3(1.0f, 1.0f, 1.0f);
+  light.ambient = 0.2f;
+  light.diffuse = 0.5f;
+  light.specular = 1.0f;
+
+  // ImGui configuration
+  // --------------------
+  int selectedMaterial = 0;
+  int selectedShape = 0;
+
+  auto clear_color = ImVec4(0.6f, 0.6f, 0.6f, 1.0f);
+  renderLoop(window, appData, clear_color, shaders, objects, light, material, diffuseMap, specularMap, selectedMaterial, selectedShape);
+
   ImGuiShutdown();
   glfwShutdown(window);
   return 0;
