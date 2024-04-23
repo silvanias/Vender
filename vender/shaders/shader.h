@@ -1,9 +1,18 @@
 #pragma once
 
+#include <string>
+#include <array>
+#include <memory>
+
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-#include <string>
+enum ShaderIdx
+{
+    generic,
+    tex,
+    light,
+};
 
 class Shader
 {
@@ -35,3 +44,6 @@ public:
 private:
     void checkCompileErrors(unsigned int shader, const std::string &type) const;
 };
+
+std::array<std::unique_ptr<Shader>, 3> loadShaders();
+void configureShaders(std::array<std::unique_ptr<Shader>, 3> &shaders);

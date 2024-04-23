@@ -24,13 +24,6 @@
 #include "models/objects/pyramid/pyramid.h"
 #include "models/lighting/light.h"
 
-enum ShaderIdx
-{
-  generic,
-  tex,
-  light,
-};
-
 enum ObjectIdx
 {
   cubeNorm,
@@ -55,7 +48,6 @@ void renderLoop(GLFWwindow *window, const std::unique_ptr<AppData> &appData, con
 
     // Light rendering
     // -----------------------
-
     glm::mat4 projection = glm::perspective(glm::radians(camera.fov), (float)appData->framebufferWidth / (float)appData->framebufferHeight, 0.1f, 100.0f);
     glm::mat4 view = camera.calculateView();
     auto model = glm::mat4(1.0f);
@@ -188,22 +180,6 @@ void renderLoop(GLFWwindow *window, const std::unique_ptr<AppData> &appData, con
     glfwSwapBuffers(window);
     glfwPollEvents();
   }
-}
-
-std::array<std::unique_ptr<Shader>, 3> loadShaders()
-{
-  std::array<std::unique_ptr<Shader>, 3> shaders = {
-      std::make_unique<Shader>("../vender/shaders/vertex/obj_generic.vs", "../vender/shaders/fragment/obj_generic.fs"),
-      std::make_unique<Shader>("../vender/shaders/vertex/obj_textured.vs", "../vender/shaders/fragment/obj_textured.fs"),
-      std::make_unique<Shader>("../vender/shaders/vertex/obj_generic.vs", "../vender/shaders/fragment/point_light.fs")};
-  return shaders;
-}
-
-void configureShaders(std::array<std::unique_ptr<Shader>, 3> &shaders)
-{
-  shaders[ShaderIdx::tex]->use();
-  shaders[ShaderIdx::tex]->setInt("material.diffuse", 0);
-  shaders[ShaderIdx::tex]->setInt("material.specular", 1);
 }
 
 int main()

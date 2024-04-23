@@ -1,9 +1,5 @@
 #include "shader.h"
 
-#include <glad/glad.h>
-#include <glm/glm.hpp>
-
-#include <string>
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -152,4 +148,20 @@ void Shader::checkCompileErrors(unsigned int shader, const std::string &type) co
                       << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
         }
     }
+}
+
+std::array<std::unique_ptr<Shader>, 3> loadShaders()
+{
+    std::array<std::unique_ptr<Shader>, 3> shaders = {
+        std::make_unique<Shader>("../vender/shaders/vertex/obj_generic.vs", "../vender/shaders/fragment/obj_generic.fs"),
+        std::make_unique<Shader>("../vender/shaders/vertex/obj_textured.vs", "../vender/shaders/fragment/obj_textured.fs"),
+        std::make_unique<Shader>("../vender/shaders/vertex/obj_generic.vs", "../vender/shaders/fragment/point_light.fs")};
+    return shaders;
+}
+
+void configureShaders(std::array<std::unique_ptr<Shader>, 3> &shaders)
+{
+    shaders[ShaderIdx::tex]->use();
+    shaders[ShaderIdx::tex]->setInt("material.diffuse", 0);
+    shaders[ShaderIdx::tex]->setInt("material.specular", 1);
 }
