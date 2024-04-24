@@ -7,6 +7,8 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
+#include "../render/models/lighting/light.h"
+
 enum ShaderIdx
 {
     generic,
@@ -47,3 +49,4 @@ private:
 
 std::array<std::unique_ptr<Shader>, 3> loadShaders();
 void configureShaders(std::array<std::unique_ptr<Shader>, 3> &shaders);
+void setShaderLighting(const std::unique_ptr<Shader> &shader, const Light &light);

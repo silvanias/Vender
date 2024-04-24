@@ -2,7 +2,7 @@ vcpkg
 build
 .vscode
 .DS_Store
-imgui
+lib/imgui
 venv
 docs/
 Doxyfile

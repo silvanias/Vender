@@ -17,7 +17,8 @@ set(APP_SOURCES
     render/appdata/appdata.cpp
     render/camera/camera.cpp
     render/input/input.cpp
-    render/gui/imgui/imgui_lifecycle.cpp
+    render/gui/imgui/lifecycle/imgui_lifecycle.cpp
+    render/gui/imgui/render/imgui_render.cpp
     render/gui/window/window.cpp
     shaders/shader.cpp
 )
@@ -43,6 +44,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/lib
     ${CMAKE_SOURCE_DIR}/vender
     ${CMAKE_SOURCE_DIR}/vender/render
+    ${CMAKE_SOURCE_DIR}/vender/render/gui
     ${CMAKE_SOURCE_DIR}/assets)
 
 

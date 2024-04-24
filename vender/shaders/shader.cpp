@@ -165,3 +165,11 @@ void configureShaders(std::array<std::unique_ptr<Shader>, 3> &shaders)
     shaders[ShaderIdx::tex]->setInt("material.diffuse", 0);
     shaders[ShaderIdx::tex]->setInt("material.specular", 1);
 }
+
+void setShaderLighting(const std::unique_ptr<Shader> &shader, const Light &light)
+{
+    shader->setVec3("light.pos", light.pos);
+    shader->setVec3("light.ambient", light.ambient * light.color);
+    shader->setVec3("light.diffuse", light.diffuse * light.color);
+    shader->setVec3("light.specular", light.specular * light.color);
+}
