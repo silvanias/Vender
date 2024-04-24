@@ -158,18 +158,29 @@ std::array<std::unique_ptr<Shader>, 3> loadShaders()
         std::make_unique<Shader>("../vender/shaders/vertex/obj_generic.vs", "../vender/shaders/fragment/point_light.fs")};
     return shaders;
 }
-
 void configureShaders(std::array<std::unique_ptr<Shader>, 3> &shaders)
 {
     shaders[ShaderIdx::tex]->use();
     shaders[ShaderIdx::tex]->setInt("material.diffuse", 0);
     shaders[ShaderIdx::tex]->setInt("material.specular", 1);
 }
-
 void setShaderLighting(const std::unique_ptr<Shader> &shader, const Light &light)
 {
     shader->setVec3("light.pos", light.pos);
     shader->setVec3("light.ambient", light.ambient * light.color);
     shader->setVec3("light.diffuse", light.diffuse * light.color);
     shader->setVec3("light.specular", light.specular * light.color);
+}
+void setShaderMVP(const std::unique_ptr<Shader> &shader, const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &projection)
+{
+    shader->setMat4("model", model);
+    shader->setMat4("view", view);
+    shader->setMat4("projection", projection);
+}
+void bindTextures(unsigned int diffuseMap, unsigned int specularMap)
+{
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, diffuseMap);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, specularMap);
 }

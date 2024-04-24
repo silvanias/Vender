@@ -35,15 +35,15 @@ int main()
 
   renderLoop(window,
              appData,
-             clear_color,
-             shaders,
              objects,
-             light,
+             shaders,
+             selectedShape,
              material,
-             diffuseMap,
-             specularMap,
              selectedMaterial,
-             selectedShape);
+             light,
+             clear_color,
+             diffuseMap,
+             specularMap);
 
   ImGuiShutdown();
   glfwShutdown(window);

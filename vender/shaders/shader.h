@@ -5,9 +5,7 @@
 #include <memory>
 
 #include <glad/glad.h>
-#include <glm/glm.hpp>
-
-#include "../render/models/lighting/light.h"
+#include "models/lighting/light.h"
 
 enum ShaderIdx
 {
@@ -50,3 +48,5 @@ private:
 std::array<std::unique_ptr<Shader>, 3> loadShaders();
 void configureShaders(std::array<std::unique_ptr<Shader>, 3> &shaders);
 void setShaderLighting(const std::unique_ptr<Shader> &shader, const Light &light);
+void setShaderMVP(const std::unique_ptr<Shader> &shader, const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &projection);
+void bindTextures(unsigned int diffuseMap, unsigned int specularMap);
