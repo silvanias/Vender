@@ -13,8 +13,14 @@ GLFWwindow *createWindow(GLint scr_width, GLint scr_height)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // safe on mac
+    GLFWwindow *window = glfwCreateWindow(scr_width, scr_height, "vender", nullptr, nullptr);
 
-    return glfwCreateWindow(scr_width, scr_height, "vender", nullptr, nullptr);
+    if (window == nullptr)
+    {
+        std::cout << "Failed to create GLFW window" << std::endl;
+        glfwTerminate();
+    }
+    return window;
 }
 
 void configWindow(GLFWwindow *window)

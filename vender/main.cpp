@@ -113,11 +113,8 @@ void renderLoop(GLFWwindow *window, const std::unique_ptr<AppData> &appData,
       model = glm::mat4(1.0f);
       shaders[ShaderIdx::tex]->setMat4("model", model);
 
-      // Bind diffuse map
       glActiveTexture(GL_TEXTURE0);
       glBindTexture(GL_TEXTURE_2D, diffuseMap);
-
-      // Bind specular map
       glActiveTexture(GL_TEXTURE1);
       glBindTexture(GL_TEXTURE_2D, specularMap);
 
@@ -146,24 +143,22 @@ void renderLoop(GLFWwindow *window, const std::unique_ptr<AppData> &appData,
 
     if (ImGui::CollapsingHeader("Object"))
     {
+      ImGui::Columns(2, nullptr, false);
       ImGui::RadioButton("Cube", &selectedShape, 0);
-      if (selectedShape == 0)
-      {
-        ImGui::Indent();
-        if (ImGui::RadioButton("Generic", &selectedMaterial, 0))
-        {
-          material = mat_generic;
-        }
-        else if (ImGui::RadioButton("Gold", &selectedMaterial, 1))
-        {
-          material = mat_gold;
-        }
-        ImGui::RadioButton("Container", &selectedMaterial, 2);
-        ImGui::Unindent();
-      }
-
       ImGui::RadioButton("Pyramid", &selectedShape, 1);
-      // TODO: Seperate material and shape code
+
+      ImGui::NextColumn();
+      if (ImGui::RadioButton("Generic", &selectedMaterial, 0))
+      {
+        material = Material();
+      }
+      else if (ImGui::RadioButton("Gold", &selectedMaterial, 1))
+      {
+        material = mat_gold;
+      }
+      ImGui::RadioButton("Container", &selectedMaterial, 2);
+      ImGui::Columns(1);
+      ImGui::Dummy(ImVec2(0.0f, 15.0f));
 
       ImGui::ColorPicker3("Ambient", glm::value_ptr(material.ambient));
       ImGui::ColorPicker3("Diffuse", glm::value_ptr(material.diffuse));
@@ -184,13 +179,6 @@ void renderLoop(GLFWwindow *window, const std::unique_ptr<AppData> &appData,
 int main()
 {
   GLFWwindow *window = createWindow();
-  if (window == nullptr)
-  {
-    std::cout << "Failed to create GLFW window" << std::endl;
-    glfwTerminate();
-    return -1;
-  }
-
   configWindow(window);
   initializeGlAD();
   glEnable(GL_DEPTH_TEST);
@@ -204,19 +192,12 @@ int main()
   configureShaders(shaders);
   auto objects = createObjects();
 
-  Material material = mat_generic;
+  Material material;
   Light light;
-
-  light.pos = glm::vec3(1.0f, 0.17f, 1.6f);
-  light.color = glm::vec3(1.0f, 1.0f, 1.0f);
-  light.ambient = 0.2f;
-  light.diffuse = 0.5f;
-  light.specular = 1.0f;
-
   int selectedMaterial = 0;
   int selectedShape = 0;
-
   auto clear_color = ImVec4(0.6f, 0.6f, 0.6f, 1.0f);
+
   renderLoop(
       window,
       appData,
@@ -229,6 +210,7 @@ int main()
       specularMap,
       selectedMaterial,
       selectedShape);
+
   ImGuiShutdown();
   glfwShutdown(window);
   return 0;
