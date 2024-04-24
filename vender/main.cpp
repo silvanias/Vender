@@ -20,20 +20,19 @@
 #include "shaders/shader.h"
 #include "assets/texture.h"
 #include "assets/material.h"
-#include "models/objects/cube/cube.h"
-#include "models/objects/pyramid/pyramid.h"
+#include "models/objects/object_utils.h"
 #include "models/lighting/light.h"
 
-enum ObjectIdx
-{
-  cubeNorm,
-  cubeTex,
-  pyramidNorm,
-  pyramidTex,
-  lightCube,
-};
-
-void renderLoop(GLFWwindow *window, const std::unique_ptr<AppData> &appData, const ImVec4 &clear_color, std::array<std::unique_ptr<Shader>, 3> &shaders, std::array<AbstractShape *, 5> &objects, Light &light, Material &material, unsigned int diffuseMap, unsigned int specularMap, int &selectedMaterial, int &selectedShape)
+void renderLoop(GLFWwindow *window, const std::unique_ptr<AppData> &appData,
+                const ImVec4 &clear_color,
+                std::array<std::unique_ptr<Shader>, 3> &shaders,
+                std::array<std::unique_ptr<AbstractShape>, 5> &objects,
+                Light &light,
+                Material &material,
+                unsigned int diffuseMap,
+                unsigned int specularMap,
+                int &selectedMaterial,
+                int &selectedShape)
 {
   while (!glfwWindowShouldClose(window))
   {
@@ -193,14 +192,9 @@ int main()
   }
 
   configWindow(window);
-  if (!initializeGlAD())
-  {
-    return -1;
-  }
+  initializeGlAD();
   glEnable(GL_DEPTH_TEST);
-
   initImGui(window);
-
   const std::unique_ptr<AppData> appData = initAppData(window);
   glfwSetWindowUserPointer(window, appData.get());
 
@@ -208,17 +202,9 @@ int main()
   unsigned int specularMap = loadTexture("../assets/textures/container_specular.png");
   auto shaders = loadShaders();
   configureShaders(shaders);
-
-  CubeNorm cubeNorm;
-  CubeTex cubeTex;
-  PyramidNorm pyramidNorm;
-  PyramidTex pyramidTex;
-  CubeDefault lightCube;
-  std::array<AbstractShape *, 5> objects = {
-      &cubeNorm, &cubeTex, &pyramidNorm, &pyramidTex, &lightCube};
+  auto objects = createObjects();
 
   Material material = mat_generic;
-
   Light light;
 
   light.pos = glm::vec3(1.0f, 0.17f, 1.6f);
@@ -227,14 +213,22 @@ int main()
   light.diffuse = 0.5f;
   light.specular = 1.0f;
 
-  // ImGui configuration
-  // --------------------
   int selectedMaterial = 0;
   int selectedShape = 0;
 
   auto clear_color = ImVec4(0.6f, 0.6f, 0.6f, 1.0f);
-  renderLoop(window, appData, clear_color, shaders, objects, light, material, diffuseMap, specularMap, selectedMaterial, selectedShape);
-
+  renderLoop(
+      window,
+      appData,
+      clear_color,
+      shaders,
+      objects,
+      light,
+      material,
+      diffuseMap,
+      specularMap,
+      selectedMaterial,
+      selectedShape);
   ImGuiShutdown();
   glfwShutdown(window);
   return 0;
