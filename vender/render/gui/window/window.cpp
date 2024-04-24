@@ -3,7 +3,7 @@
 #include <GLFW/glfw3.h>
 
 #include "window.h"
-#include "appdata.h"
+#include "appdata/appdata.h"
 #include "input/input.h"
 
 GLFWwindow *createWindow(GLint scr_width, GLint scr_height)

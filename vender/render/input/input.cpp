@@ -1,6 +1,6 @@
 #include "input.h"
 #include "camera/camera.h"
-#include "appdata.h"
+#include "appdata/appdata.h"
 
 void processInput(GLFWwindow *window)
 {
