@@ -4,6 +4,7 @@
 
 void processInput(GLFWwindow *window)
 {
+    using enum Direction;
     Camera &camera = Camera::getInstance();
     auto appData = (AppData *)glfwGetWindowUserPointer(window);
 
@@ -17,13 +18,13 @@ void processInput(GLFWwindow *window)
         glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        camera.processKeyboard(Direction::UP, appData->deltaTime);
+        camera.processKeyboard(UP, appData->deltaTime);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        camera.processKeyboard(Direction::DOWN, appData->deltaTime);
+        camera.processKeyboard(DOWN, appData->deltaTime);
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        camera.processKeyboard(Direction::LEFT, appData->deltaTime);
+        camera.processKeyboard(LEFT, appData->deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        camera.processKeyboard(Direction::RIGHT, appData->deltaTime);
+        camera.processKeyboard(RIGHT, appData->deltaTime);
 }
 
 void keyCallback(GLFWwindow *window, int key, int, int action, int)
@@ -57,27 +58,27 @@ void mouseCallback(GLFWwindow *window, double xpos, double ypos)
 
     if (appData->firstMouse)
     {
-        appData->lastX = xpos;
-        appData->lastY = ypos;
+        appData->lastX = (float)xpos;
+        appData->lastY = (float)ypos;
         appData->firstMouse = false;
     }
 
-    float xoffset = xpos - appData->lastX;
-    float yoffset = appData->lastY - ypos;
-    appData->lastX = xpos;
-    appData->lastY = ypos;
+    float xoffset = (float)xpos - appData->lastX;
+    float yoffset = appData->lastY - (float)ypos;
+    appData->lastX = (float)xpos;
+    appData->lastY = (float)ypos;
 
     camera.processMouse(xoffset, yoffset);
 }
 
-void scrollCallback(GLFWwindow *window, double xoffset, double yoffset)
+void scrollCallback(GLFWwindow *window, double, double yoffset)
 {
     Camera &camera = Camera::getInstance();
-    auto appData = (AppData *)glfwGetWindowUserPointer(window);
 
-    if (appData->io.WantCaptureMouse || appData->debug_mode)
+    if (auto appData = (AppData *)glfwGetWindowUserPointer(window);
+        appData->io.WantCaptureMouse || appData->debug_mode)
     {
         return;
     }
-    camera.processZoom(yoffset);
+    camera.processZoom((float)yoffset);
 }

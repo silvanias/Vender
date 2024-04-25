@@ -34,7 +34,7 @@ int main()
   auto clear_color = ImVec4(0.6f, 0.6f, 0.6f, 1.0f);
 
   renderLoop(window,
-             appData,
+             *appData,
              objects,
              shaders,
              selectedShape,

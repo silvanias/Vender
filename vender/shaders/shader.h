@@ -7,11 +7,11 @@
 #include <glad/glad.h>
 #include "models/lighting/light.h"
 
-enum ShaderIdx
+enum struct ShaderIdx
 {
-    generic,
-    tex,
-    light,
+    generic = 0,
+    tex = 1,
+    light = 2,
 };
 
 class Shader
@@ -47,6 +47,6 @@ private:
 
 std::array<std::unique_ptr<Shader>, 3> loadShaders();
 void configureShaders(std::array<std::unique_ptr<Shader>, 3> &shaders);
-void setShaderLighting(const std::unique_ptr<Shader> &shader, const Light &light);
-void setShaderMVP(const std::unique_ptr<Shader> &shader, const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &projection);
+void setShaderLighting(const Shader &shader, const Light &light);
+void setShaderMVP(const Shader &shader, const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &projection);
 void bindTextures(unsigned int diffuseMap, unsigned int specularMap);

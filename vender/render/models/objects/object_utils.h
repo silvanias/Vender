@@ -5,13 +5,13 @@
 
 #include "shape.h"
 
-enum ObjectIdx
+enum struct ObjectIdx
 {
-    cubeNorm,
-    cubeTex,
-    pyramidNorm,
-    pyramidTex,
-    lightCube,
+    cubeNorm = 0,
+    cubeTex = 1,
+    pyramidNorm = 2,
+    pyramidTex = 3,
+    lightCube = 4,
 };
 
 std::array<std::unique_ptr<AbstractShape>, 5> createObjects();

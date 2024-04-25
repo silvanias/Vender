@@ -11,9 +11,9 @@
 #include "models/objects/object_utils.h"
 #include "models/lighting/light.h"
 
-void renderLoop(GLFWwindow *window, const std::unique_ptr<AppData> &appData,
-                std::array<std::unique_ptr<AbstractShape>, 5> &objects,
-                std::array<std::unique_ptr<Shader>, 3> &shaders,
+void renderLoop(GLFWwindow *window, AppData &appData,
+                const std::array<std::unique_ptr<AbstractShape>, 5> &objects,
+                const std::array<std::unique_ptr<Shader>, 3> &shaders,
                 int &selectedShape,
                 Material &material,
                 int &selectedMaterial,
@@ -29,18 +29,18 @@ void renderLoop(GLFWwindow *window, const std::unique_ptr<AppData> &appData,
         clearFrame(clear_color);
         processInput(window);
 
-        auto MVP = calculateMVP(camera, (float)appData->framebufferWidth / (float)appData->framebufferHeight);
-        renderLights(objects, shaders[ShaderIdx::light], MVP, light);
+        auto MVP = calculateMVP(camera, (float)appData.framebufferWidth / (float)appData.framebufferHeight);
+        renderLights(objects, *shaders[(size_t)ShaderIdx::light], MVP, light);
         if (selectedMaterial < 2)
         {
-            renderGenShapes(objects, selectedShape, shaders[ShaderIdx::generic], camera, material, MVP, light);
+            renderGenShapes(objects, selectedShape, *shaders[(size_t)ShaderIdx::generic], camera, material, MVP, light);
         }
         else
         {
-            renderTexShapes(objects, selectedShape, shaders[ShaderIdx::tex], camera, material, MVP, light, diffuseMap, specularMap);
+            renderTexShapes(objects, selectedShape, *shaders[(size_t)ShaderIdx::tex], camera, material, MVP, light, diffuseMap, specularMap);
         }
 
-        renderUI(appData->io.Framerate, light, material, selectedMaterial, selectedShape);
+        renderUI(appData.io.Framerate, light, material, selectedMaterial, selectedShape);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

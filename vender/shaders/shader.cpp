@@ -160,22 +160,23 @@ std::array<std::unique_ptr<Shader>, 3> loadShaders()
 }
 void configureShaders(std::array<std::unique_ptr<Shader>, 3> &shaders)
 {
-    shaders[ShaderIdx::tex]->use();
-    shaders[ShaderIdx::tex]->setInt("material.diffuse", 0);
-    shaders[ShaderIdx::tex]->setInt("material.specular", 1);
+    using enum ShaderIdx;
+    shaders[(size_t)tex]->use();
+    shaders[(size_t)tex]->setInt("material.diffuse", 0);
+    shaders[(size_t)tex]->setInt("material.specular", 1);
 }
-void setShaderLighting(const std::unique_ptr<Shader> &shader, const Light &light)
+void setShaderLighting(const Shader &shader, const Light &light)
 {
-    shader->setVec3("light.pos", light.pos);
-    shader->setVec3("light.ambient", light.ambient * light.color);
-    shader->setVec3("light.diffuse", light.diffuse * light.color);
-    shader->setVec3("light.specular", light.specular * light.color);
+    shader.setVec3("light.pos", light.pos);
+    shader.setVec3("light.ambient", light.ambient * light.color);
+    shader.setVec3("light.diffuse", light.diffuse * light.color);
+    shader.setVec3("light.specular", light.specular * light.color);
 }
-void setShaderMVP(const std::unique_ptr<Shader> &shader, const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &projection)
+void setShaderMVP(const Shader &shader, const glm::mat4 &model, const glm::mat4 &view, const glm::mat4 &projection)
 {
-    shader->setMat4("model", model);
-    shader->setMat4("view", view);
-    shader->setMat4("projection", projection);
+    shader.setMat4("model", model);
+    shader.setMat4("view", view);
+    shader.setMat4("projection", projection);
 }
 void bindTextures(unsigned int diffuseMap, unsigned int specularMap)
 {

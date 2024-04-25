@@ -7,14 +7,15 @@ glm::mat4 Camera::calculateView() const
 
 void Camera::processKeyboard(Direction direction, float deltaTime)
 {
+    using enum Direction;
     float cameraSpeed = speed * deltaTime;
-    if (direction == Direction::UP)
+    if (direction == UP)
         cameraPos += cameraSpeed * cameraFront;
-    if (direction == Direction::DOWN)
+    if (direction == DOWN)
         cameraPos -= cameraSpeed * cameraFront;
-    if (direction == Direction::LEFT)
+    if (direction == LEFT)
         cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-    if (direction == Direction::RIGHT)
+    if (direction == RIGHT)
         cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 }
 

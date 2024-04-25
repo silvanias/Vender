@@ -1,60 +1,60 @@
 #include "render_utils.h"
 #include "models/objects/object_utils.h"
 
-void renderGenShapes(const std::array<std::unique_ptr<AbstractShape>, 5> &objects, const int &selectedShape, const std::unique_ptr<Shader> &shader, const Camera &camera, const Material &material, const std::array<glm::mat4, 3> &MVP, const Light &light)
+void renderGenShapes(const std::array<std::unique_ptr<AbstractShape>, 5> &objects, const int &selectedShape, const Shader &shader, const Camera &camera, const Material &material, const std::array<glm::mat4, 3> &MVP, const Light &light)
 {
-    shader->use();
+    shader.use();
     setShaderLighting(shader, light);
-    shader->setVec3("viewPos", camera.cameraPos);
+    shader.setVec3("viewPos", camera.cameraPos);
     setShaderMVP(shader, MVP[0], MVP[1], MVP[2]);
 
-    shader->setVec3("material.ambient", material.ambient);
-    shader->setVec3("material.diffuse", material.diffuse);
-    shader->setVec3("material.specular", material.specular);
-    shader->setFloat("material.shininess", material.shininess);
+    shader.setVec3("material.ambient", material.ambient);
+    shader.setVec3("material.diffuse", material.diffuse);
+    shader.setVec3("material.specular", material.specular);
+    shader.setFloat("material.shininess", material.shininess);
 
     if (selectedShape < 1)
     {
-        objects[ObjectIdx::cubeNorm]->render();
+        objects[(size_t)ObjectIdx::cubeNorm]->render();
     }
     else
     {
-        objects[ObjectIdx::pyramidNorm]->render();
+        objects[(size_t)ObjectIdx::pyramidNorm]->render();
     }
 }
 
-void renderTexShapes(const std::array<std::unique_ptr<AbstractShape>, 5> &objects, const int &selectedShape, const std::unique_ptr<Shader> &shader, const Camera &camera, const Material &material, const std::array<glm::mat4, 3> &MVP, const Light &light, const unsigned int &diffuseMap, const unsigned int &specularMap)
+void renderTexShapes(const std::array<std::unique_ptr<AbstractShape>, 5> &objects, const int &selectedShape, const Shader &shader, const Camera &camera, const Material &material, const std::array<glm::mat4, 3> &MVP, const Light &light, const unsigned int &diffuseMap, const unsigned int &specularMap)
 {
-    shader->use();
+    shader.use();
     setShaderLighting(shader, light);
-    shader->setVec3("viewPos", camera.cameraPos);
+    shader.setVec3("viewPos", camera.cameraPos);
     setShaderMVP(shader, MVP[0], MVP[1], MVP[2]);
 
-    shader->setVec3("material.specular", material.specular);
-    shader->setFloat("material.shininess", material.shininess);
+    shader.setVec3("material.specular", material.specular);
+    shader.setFloat("material.shininess", material.shininess);
 
     bindTextures(diffuseMap, specularMap);
 
     if (selectedShape < 1)
     {
-        objects[ObjectIdx::cubeTex]->render();
+        objects[(size_t)ObjectIdx::cubeTex]->render();
     }
     else
     {
-        objects[ObjectIdx::pyramidTex]->render();
+        objects[(size_t)ObjectIdx::pyramidTex]->render();
     }
 }
 
-void renderLights(const std::array<std::unique_ptr<AbstractShape>, 5> &objects, const std::unique_ptr<Shader> &shader, const std::array<glm::mat4, 3> &MVP, const Light &light)
+void renderLights(const std::array<std::unique_ptr<AbstractShape>, 5> &objects, const Shader &shader, const std::array<glm::mat4, 3> &MVP, const Light &light)
 {
-    shader->use();
+    shader.use();
     auto model = glm::mat4(1.0f);
     model = glm::translate(model, light.pos);
     model = glm::scale(model, glm::vec3(0.2f));
     setShaderMVP(shader, model, MVP[1], MVP[2]);
-    shader->setVec3("lightColor", light.color);
+    shader.setVec3("lightColor", light.color);
 
-    objects[ObjectIdx::lightCube]->render();
+    objects[(size_t)ObjectIdx::lightCube]->render();
 }
 
 void clearFrame(const ImVec4 &clear_color)
@@ -76,9 +76,9 @@ std::array<glm::mat4, 3> calculateMVP(const Camera &camera, float ratio, const g
         projection};
 }
 
-void updateDeltaTime(const std::unique_ptr<AppData> &appData)
+void updateDeltaTime(AppData &appData)
 {
     auto currentFrame = static_cast<float>(glfwGetTime());
-    appData->deltaTime = currentFrame - appData->lastFrame;
-    appData->lastFrame = currentFrame;
+    appData.deltaTime = currentFrame - appData.lastFrame;
+    appData.lastFrame = currentFrame;
 }
