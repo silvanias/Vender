@@ -20,7 +20,7 @@ public:
         glDrawArrays(GL_TRIANGLES, 0, 18);
     }
 
-    ~PyramidDefault()
+    ~PyramidDefault() override
     {
         glDeleteBuffers(1, &VBO);
         glDeleteVertexArrays(1, &VAO);
@@ -110,7 +110,7 @@ public:
         glDrawArrays(GL_TRIANGLES, 0, 18);
     }
 
-    ~PyramidTex()
+    ~PyramidTex() override
     {
         glDeleteBuffers(1, &VBO);
         glDeleteVertexArrays(1, &VAO);
