@@ -4,5 +4,5 @@ build
 .DS_Store
 lib/imgui
 venv
-docs/
+docs/doxygen
 Doxyfile

@@ -1,0 +1,95 @@
+@startuml
+entity Renderer {
+    clearFrame(clear_color)
+    calculateMVP(camera, aspectRatio)
+    renderLights(objects, shader, MVP, light)
+    renderGenShapes(objects, shape, shader, camera, material, MVP, light)
+    renderTexShapes(objects, shape, shader, camera, material, MVP, light, diffuseMap, specularMap)
+    renderUI(appData.io.Framerate, light, material, selectedMaterial, selectedShape)
+}
+
+class Shader {
+    +ID : unsigned int
+    +Shader(vertexPath : const char *, fragmentPath : const char *)
+    +use() const
+    +del() const
+    +setVar(name : const std::string &, value : var) const
+    +setMat4(name : const std::string &, mat : const glm::mat4 &) const
+    -checkCompileErrors(shader : unsigned int, type : const std::string &) const
+}
+
+class Camera {
+    calculateView() : glm::mat4
+    processKeyboard(direction : Direction, deltaTime : float)
+    processMouse(xoffset : float, yoffset : float)
+    processZoom(yoffset : float)
+    +cameraPos : glm::vec3
+    +cameraFront : glm::vec3
+    +cameraUp : glm::vec3
+}
+
+class Light {
+    +pos : glm::vec3
+    +color : glm::vec3
+    +ambient : float
+    +diffuse : float
+    +specular : float
+}
+
+class Material {
+}
+
+abstract class AbstractShape {
+    #{abstract}render() const
+    setupBuffers()
+    #{abstract}getVertexDataSize() const : size_t
+    reserveVertexMemory(BUFFER_SIZE : size_t) : std::tuple<unsigned int, unsigned int>
+    #{abstract}setupVAO(VAO : unsigned int)
+    #{abstract}setupVBO(VBO : unsigned int)
+    enableVertexAttribute(index : unsigned int, numComponents : unsigned int, stride : size_t, offset : size_t) const
+}
+
+class CubeData {
+    +vertPos : std::array<float, 108>
+    +vertNorm : std::array<float, 108>
+    +texCoords : std::array<float, 72>
+    +vertPosSize : size_t
+    +vertNormSize : size_t
+    +texCoordSize : size_t
+}
+
+class CubeTex {
+    render() const
+    +~CubeTex()
+    getVertexDataSize() const : size_t
+    setupVAO(_VAO : unsigned int)
+    setupVBO(_VBO : unsigned int)
+    -VAO : unsigned int
+    -VBO : unsigned int
+}
+
+class Window {
+    processInput(window)
+    glfwSwapBuffers(window)
+    glfwPollEvents()
+}
+
+Class AppData {
+    +io : IO
+    +framebufferWidth : int
+    +framebufferHeight : int
+    +lastX : float
+    +lastY : float
+}
+
+AbstractShape <|-- CubeTex
+
+Renderer "1" *-- "*" Shader : uses >
+Renderer "1" *-- "1" Camera : uses >
+Renderer "1" *-- "1" Light : uses >
+Renderer "1" *-- "1" Material : uses >
+Renderer "1" *-- "*" AbstractShape : uses >
+Renderer "1" *-- "1" Window : uses >
+Renderer "1" *-- "1" AppData : uses >
+CubeTex "1" *-- "1" CubeData : has >
+@enduml

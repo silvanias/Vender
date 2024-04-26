@@ -1,0 +1,45 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+!include DEVICONS/angular.puml
+!include DEVICONS/java.puml
+!include DEVICONS/msql_server.puml
+!include FONTAWESOME/users.puml
+
+LAYOUT_WITH_LEGEND()
+
+Person(user, "User", "A user of the graphics application.")
+
+Boundary(mainAppBoundary, "Desktop app") {
+
+Container(mainApp, "Main Application", "C++", "Provides 3D rendering capabilities with a user interface for controls.")
+
+ContainerDb(shaders, "Shader Programs", "GLSL", "Contains vertex and fragment shaders for rendering different objects and lighting.")
+ContainerDb(textures, "Textures", "Images", "Provides diffuse and specular maps for textured objects.")
+ContainerDb(materials, "Materials", "C++", "Material properties like ambient, diffuse, specular colors, and shininess.")
+
+Container(rendering, "Rendering Engine", "C++", "Handles all rendering operations using OpenGL.")
+Container(shaderManagement, "Shader Management", "C++", "Manages shader creation and configuration,")
+Container(windowManagement, "Window Management", "C++", "Manages window creation, configuration, and events.")
+Container(inputProcessing, "Input Processing", "C++", "Processes user input and updates application state.")
+Container(lightingConfig, "Lighting Configuration", "C++", "Defines light properties and interactions.")
+Container(modelManagement, "Model Management", "C++", "Manages 3D models like cubes and pyramids.")
+Container(gui, "GUI Management", "C++", "Uses ImGui to render UI components and manage application controls.")
+
+Rel(user, mainApp, "Uses")
+Rel(mainApp, rendering, "Delegates rendering to")
+Rel(mainApp, windowManagement, "Uses")
+Rel(windowManagement, gui, "Utilizes")
+Rel(mainApp, inputProcessing, "Uses")
+
+Rel_U(rendering, shaderManagement, "Uses")
+Rel_D(shaderManagement, shaders, "Applies")
+Rel_D(rendering, textures, "Applies")
+Rel_D(rendering, materials, "Applies")
+Rel_D(rendering, lightingConfig, "Configures")
+Rel(rendering, modelManagement, "Renders models from")
+
+}
+@enduml
