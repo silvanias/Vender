@@ -1,0 +1,16 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+!include FONTAWESOME/users.puml
+
+LAYOUT_WITH_LEGEND()
+
+Person(user, "User", "A user of the graphics application.")
+System_Boundary(mainSystem, "Desktop Application") {
+    System(mainApp, "Rendering Application", "Provides 3D rendering capabilities with a user interface for controls.")
+}
+
+Rel(user, mainApp, "Uses")
+@enduml
