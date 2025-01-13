@@ -1,5 +1,13 @@
 # Vender
 
+Lumi is an OpenGL rasterizer. Lumi provides a modular architecture for scene setup, camera control, and rendering. It leverages modern C++ capabilities and provides a simple GUI using ImGui for real-time interaction.
+
+Phong Lighting     |  Textured Box with Specular Map
+:-------------------------:|:-------------------------:
+<img width="396" alt="Phong Lighting" src="https://github.com/user-attachments/assets/0f5eed08-8fb3-4c72-93b0-65e77a7855cb" /> | <img width="396" alt="textured_box" src="https://github.com/user-attachments/assets/7a81bf4f-7789-4445-bc91-9660eda30fbc" />
+
+
+
 This guide will walk you through the setup process for the `vender` OpenGL application using CMake and vcpkg for dependency management.
 
 ## Prerequisites
