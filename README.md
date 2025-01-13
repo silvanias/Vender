@@ -1,6 +1,6 @@
 # Vender
 
-Lumi is an OpenGL rasterizer. Lumi provides a modular architecture for scene setup, camera control, and rendering. It leverages modern C++ capabilities and provides a simple GUI using ImGui for real-time interaction.
+Vender is an OpenGL rasterizer. Vender provides a modular architecture for scene setup, camera control, and rendering. It leverages modern C++ capabilities and provides a simple GUI using ImGui for real-time interaction.
 
 Phong Lighting     |  Textured Box with Specular Map
 :-------------------------:|:-------------------------:
